@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  {% if user.avatar_url %}
+    <img src="{{ user.avatar_url }}">
+  {% else %}
+    <img src="../static/default-avatar.png">
+  {% endif %}
+{% endblock %}

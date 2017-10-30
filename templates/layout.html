@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiny</title>
+  <meta name="description" content="Read, write and comment on blog posts.">
+  <!-- icons -->
+  <!-- bootstrap css -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- site css -->
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  <!-- navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header pull-left">
+        <a class="navbar-brand" href="/">Tiny</a>
+      </div>
+      <div class="navbar-header pull-right">
+        {% if session.email %}
+          <a class="btn btn-link" href="/profile">Profile</a>
+          <a class="btn btn-link" href="/sign-out">Sign out</a>
+          <a class="btn btn-primary" href="/posts/new">New Post</a>
+        {% else %}
+          <a class="btn btn-link" href="/sign-in">Sign in</a>
+          <a class="btn btn-primary" href="/register">Get started</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- page content -->
+  <div class="container page-content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
