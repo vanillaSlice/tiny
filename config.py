@@ -1,0 +1,5 @@
+"""
+Default configuration.
+"""
+
+DEBUG = True

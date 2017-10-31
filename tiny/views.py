@@ -1,38 +1,34 @@
 """
-Backend for Tiny blog app.
+Contains app routes.
 """
 
 from datetime import datetime
-from flask import Flask, request, render_template, session, redirect, url_for
-from pymongo import MongoClient
-from helpers import login_required, is_valid_email, encrypt_password, verify_password
+from flask import request, render_template, session, redirect, url_for
+from tiny.helpers import login_required, is_valid_email, encrypt_password, verify_password
+from tiny import app, db
 
-# create new Flask app
-app = Flask(__name__)
+"""
+Disable caching when debugging.
+"""
+if app.debug:
+    @app.after_request
+    def after_request(response):
+        """
+        Ensures responses are not cached.
+        """
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
+        return response
 
-# set up connection to database
-mongo_client = MongoClient()
-db = mongo_client.tiny
-
-# store a reference to each collection in the database
-users = db.users
-posts = db.posts
-comments = db.comments
-
-# REMOVE THIS AT END
-# ensure responses aren't cached
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    """
+    Renders home page.
+    """
+    return render_template("index.html")
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Registers a user"""
 
@@ -78,12 +74,12 @@ def register():
                                message='password and confirmation must be the same')
 
     # make sure the username is not already taken
-    if users.find_one({'email': email}):
+    if db.users.find_one({'email': email}):
         return render_template('register.html',
                                message='user with email already exists')
 
     # add new user to database
-    users.insert_one({
+    db.users.insert_one({
         'email': email,
         'display_name': display_name,
         'hash': encrypt_password(password),
@@ -117,7 +113,7 @@ def login():
                                message='must provide password')
 
     # get user from database
-    user = users.find_one({'email': email})
+    user = db.users.find_one({'email': email})
 
     # make sure user exists
     if not user:
@@ -142,13 +138,8 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', user=users.find_one({'email': session['email']}))
+    return render_template('profile.html', user=db.users.find_one({'email': session['email']}))
 
 '''POSTS'''
 
 '''COMMENTS'''
-
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
-if __name__ == '__main__':
-    app.run(debug=True, threaded=True)

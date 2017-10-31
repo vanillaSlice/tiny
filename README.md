@@ -1,20 +1,47 @@
-Install virtualenv:
+# Tiny
+A small blog app built with Flask.
+
+## Environment
+Install virtualenv to create an isolated environment:
 ```
 sudo pip install virtualenv
+```
+
+Create virtual environment:
+```
 virtualenv venv
 ```
 
-Activate environment:
+To activate the environment:
 ```
 . venv/bin/activate
 ```
 
-Deactivate environment:
+Install dependencies:
+```
+pip install -r requirements.txt
+```
+
+To save list of dependencies in virtual environment:
+```
+pip freeze > requirements.txt
+```
+
+To deactivate the environment:
 ```
 deactivate
 ```
 
-Install Flask:
+## Configuration
+Create a file `instance/config.py`. Add the following properties:
+* SECRET_KEY - the app's secret key
+* MONGODB_HOST - the host running MongoDB
+* MONGODB_PORT - the port of the MongoDB instance
+* MONGODB_NAME - the database name
+* MONGODB_USERNAME - username
+* MONGODB_PASSWORD - password
+
+## Running Locally
 ```
-pip install Flask
+python run.py
 ```

@@ -1,5 +1,5 @@
 """
-Helper functions for Tiny app.
+Contains helper functions.
 """
 
 import re
