@@ -2,12 +2,10 @@
 {% from "_formhelpers.html" import render_field %}
 
 {% block content %}
-  <form action="{{ url_for('register') }}" method="post">
+  <form action="{{ url_for('sign_in') }}" method="post">
     <dl>
       {{ render_field(form.email) }}
-      {{ render_field(form.display_name) }}
       {{ render_field(form.password) }}
-      {{ render_field(form.confirmation) }}
     </dl>
     <button type="submit">Submit</button>
   </form>

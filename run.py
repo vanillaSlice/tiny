@@ -2,7 +2,7 @@
 Starts up a development server.
 """
 
-from tiny import app
+from tiny import APP
 
 if __name__ == "__main__":
-    app.run()
+    APP.run(threaded=True)

@@ -35,9 +35,9 @@ deactivate
 ## Configuration
 Create a file `instance/config.py`. Add the following properties:
 * SECRET_KEY - the app's secret key
-* MONGODB_HOST - the host running MongoDB
+* MONGODB_DB - the database name
+* MONGODB_HOST - the host running a MongoDB instance
 * MONGODB_PORT - the port of the MongoDB instance
-* MONGODB_NAME - the database name
 * MONGODB_USERNAME - username
 * MONGODB_PASSWORD - password
 
@@ -45,3 +45,4 @@ Create a file `instance/config.py`. Add the following properties:
 ```
 python run.py
 ```
+Then point your browser to [localhost:5000](http://localhost:5000).
