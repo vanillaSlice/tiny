@@ -6,6 +6,7 @@
     <dl>
       {{ render_field(form.email) }}
       {{ render_field(form.password) }}
+      <input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/>
     </dl>
     <button type="submit">Submit</button>
   </form>

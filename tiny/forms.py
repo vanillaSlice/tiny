@@ -51,6 +51,10 @@ class SignInForm(Form):
         DataRequired()
     ])
 
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        self.user = None
+
     def validate(self):
         """
         Validates sign in form.
@@ -67,5 +71,8 @@ class SignInForm(Form):
         if not sha256_crypt.verify(self.password.data, user.password):
             self.password.errors.append("Incorrect password")
             return False
+
+        # so we can access user data from view
+        self.user = user
 
         return True

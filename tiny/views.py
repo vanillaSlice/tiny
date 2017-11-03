@@ -53,15 +53,14 @@ def sign_in():
     """
     form = SignInForm(request.form)
     if request.method == "POST" and form.validate():
-        user = User.objects(email=form.email.data).first()
-        session["email"] = user.email
-        return redirect(request.args.get("next") or url_for("index"))
+        session["email"] = form.user.email
+        return redirect(request.form.get("next", None) or url_for("index"))
     return render_template("sign_in.html", form=form)
 
 @APP.route("/sign-out")
 def logout():
     """
-    Lets user log out.
+    Lets user sign out.
     """
     session.pop("email", None)
     return redirect("/")
