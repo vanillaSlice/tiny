@@ -2,11 +2,10 @@
 {% from "_formhelpers.html" import render_field %}
 
 {% block content %}
-  <form action="{{ url_for('sign_in') }}" method="post">
+  <form action="{{ url_for('sign_in', next=request.args.get('next', '')) }}" method="post">
     <dl>
       {{ render_field(form.email) }}
       {{ render_field(form.password) }}
-      <input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/>
     </dl>
     <button type="submit">Submit</button>
   </form>
