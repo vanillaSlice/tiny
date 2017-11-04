@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import redirect, request, session, url_for
+from .models import User
 
 def sign_in_required(func):
     """
@@ -14,3 +15,6 @@ def sign_in_required(func):
             return redirect(url_for("sign_in", next=request.url))
         return func(*args, **kwargs)
     return decorated_function
+
+def get_user():
+    return User.objects(email=session["email"]).first()

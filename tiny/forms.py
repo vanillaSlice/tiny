@@ -1,6 +1,6 @@
 from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.validators import DataRequired, Email, EqualTo, Length, URL
 from .models import User
 
 class RegistrationForm(Form):
@@ -60,3 +60,12 @@ class SignInForm(Form):
         self.user = user
 
         return True
+
+class UpdateProfileForm(Form):
+    display_name = StringField("Display Name", validators=[
+        DataRequired(),
+        Length(max=20)
+    ])
+    avatar_url = StringField(validators=[
+        URL()
+    ])
