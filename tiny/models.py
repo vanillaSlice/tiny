@@ -1,7 +1,3 @@
-"""
-Contains app models.
-"""
-
 from mongoengine import (CASCADE,
                          DateTimeField,
                          Document,
@@ -11,9 +7,6 @@ from mongoengine import (CASCADE,
                          StringField)
 
 class User(Document):
-    """
-    User model.
-    """
     email = EmailField(unique=True)
     display_name = StringField()
     password = StringField()
@@ -21,9 +14,6 @@ class User(Document):
     joined = DateTimeField()
 
 class Post(Document):
-    """
-    Post model.
-    """
     author = ReferenceField(User, reverse_delete_rule=CASCADE)
     title = StringField()
     image_url = StringField()
@@ -33,9 +23,6 @@ class Post(Document):
     tags = ListField(StringField())
 
 class Comment(Document):
-    """
-    Comment model.
-    """
     author = ReferenceField(User, reverse_delete_rule=CASCADE)
     post = ReferenceField(Post, reverse_delete_rule=CASCADE)
     content = StringField()

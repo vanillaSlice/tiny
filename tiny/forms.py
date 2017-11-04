@@ -1,23 +1,16 @@
-"""
-Contains app forms.
-"""
-
 from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from .models import User
 
 class RegistrationForm(Form):
-    """
-    User registration form.
-    """
     email = StringField("Email", validators=[
         DataRequired(),
         Email()
     ])
     display_name = StringField("Display Name", validators=[
         DataRequired(),
-        Length(min=4, max=20)
+        Length(max=20)
     ])
     password = PasswordField("Password", validators=[
         DataRequired(),
@@ -27,9 +20,6 @@ class RegistrationForm(Form):
     confirmation = PasswordField("Confirm Password")
 
     def validate(self):
-        """
-        Validates registration form.
-        """
         if not Form.validate(self):
             return False
 
@@ -40,9 +30,6 @@ class RegistrationForm(Form):
         return True
 
 class SignInForm(Form):
-    """
-    User sign in form.
-    """
     email = StringField("Email", validators=[
         DataRequired(),
         Email()
@@ -56,9 +43,6 @@ class SignInForm(Form):
         self.user = None
 
     def validate(self):
-        """
-        Validates sign in form.
-        """
         if not Form.validate(self):
             return False
 

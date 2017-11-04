@@ -34,6 +34,7 @@ deactivate
 
 ## Configuration
 Create a file `instance/config.py`. Add the following properties:
+* DEBUG - whether to print out debugging information
 * SECRET_KEY - the app's secret key
 * MONGODB_DB - the database name
 * MONGODB_HOST - the host running a MongoDB instance
@@ -46,3 +47,8 @@ Create a file `instance/config.py`. Add the following properties:
 python run.py
 ```
 Then point your browser to [localhost:5000](http://localhost:5000).
+
+## Testing
+```
+python -W ignore::DeprecationWarning -m unittest
+```
