@@ -11,7 +11,7 @@ def create_app(config=None):
 
     # load environment variables
     _app.config.update(dict(
-        DEBUG=os.environ.get("DEBUG", _app.config["DEBUG"]).lower() == "true",
+        DEBUG=os.environ.get("DEBUG", str(_app.config["DEBUG"])).lower() == "true",
         SECRET_KEY=os.environ.get("SECRET_KEY", _app.config["SECRET_KEY"]),
         MONGODB_URI=os.environ.get("MONGODB_URI", _app.config["MONGODB_URI"])
     ))

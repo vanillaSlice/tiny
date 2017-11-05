@@ -14,7 +14,7 @@ def sign_in_required(func):
         Checks if user is signed in, if not redirect to sign in page.
         """
         if session.get("email") is None:
-            return redirect(url_for("sign_in", next=request.url))
+            return redirect(url_for("user.sign_in", next=request.url))
         return func(*args, **kwargs)
     return decorated_function
 

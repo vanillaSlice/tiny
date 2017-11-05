@@ -1,17 +1,13 @@
 import os
-# make sure we use test configuration
-os.environ["TINY_SETTINGS"] = "../tests/config.py"
-
 from datetime import datetime
 import unittest
 from passlib.hash import sha256_crypt
-import tiny
+from tiny import create_app
 from tiny.models import Comment, Post, User
 
 class TinyTest(unittest.TestCase):
     def setUp(self):
-        self.app = tiny.APP.test_client()
-        self.db = tiny.DB
+        self.app = create_app("config.Test").test_client()
 
     def tearDown(self):
         # clear the database
@@ -28,7 +24,7 @@ class TinyTest(unittest.TestCase):
     def register(self, data=None):
         if not data:
             data = self.get_mock_registration_form()
-        return self.app.post("/register", data=data)
+        return self.app.post("/user/register", data=data)
 
     def get_mock_registration_form(self):
         return dict(email="johndoe@example.com",
@@ -39,25 +35,25 @@ class TinyTest(unittest.TestCase):
     def sign_in(self, data=None):
         if not data:
             data = self.get_mock_sign_in_form()
-        return self.app.post("/sign-in", data=data)
+        return self.app.post("/user/sign-in", data=data)
 
     def get_mock_sign_in_form(self):
         return dict(email="johndoe@example.com",
                     password="dbpassword")
 
     def sign_out(self):
-        return self.app.get("/sign-out")
+        return self.app.get("/user/sign-out")
 
     def profile(self):
-        return self.app.get("/profile")
+        return self.app.get("/user/profile")
 
     def profile_delete(self):
-        return self.app.get("/profile/delete")
+        return self.app.get("/user/profile/delete")
 
     def profile_update(self, data=None):
         if not data:
             data = self.get_mock_profile_update_form()
-        return self.app.post("/profile", data=data)
+        return self.app.post("/user/profile", data=data)
 
     def get_mock_profile_update_form(self):
         return dict(display_name="John Smith",
@@ -77,35 +73,35 @@ class TinyTest(unittest.TestCase):
 
     def test_register_success(self):
         response = self.register()
-        self.assertEqual(self.db.user.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, 302)
 
     def test_register_invalid_email(self):
         form = self.get_mock_registration_form()
         form["email"] = "invalid"
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_no_email(self):
         form = self.get_mock_registration_form()
         del form["email"]
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_display_name_too_long(self):
         form = self.get_mock_registration_form()
         form["display_name"] = "123456789012345678901"
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_no_display_name(self):
         form = self.get_mock_registration_form()
         del form["display_name"]
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_password_too_short(self):
@@ -113,7 +109,7 @@ class TinyTest(unittest.TestCase):
         form["password"] = "12345"
         form["confirmation"] = "12345"
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_password_too_long(self):
@@ -121,27 +117,27 @@ class TinyTest(unittest.TestCase):
         form["password"] = "123456789012345678901"
         form["confirmation"] = "123456789012345678901"
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_no_password(self):
         form = self.get_mock_registration_form()
         del form["password"]
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_password_and_confirmation_dont_match(self):
         form = self.get_mock_registration_form()
         form["confirmation"] = "12345"
         response = self.register(data=form)
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
 
     def test_register_account_already_exists(self):
         self.register()
         response = self.register()
-        self.assertEqual(self.db.user.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
 
     """
@@ -194,14 +190,14 @@ class TinyTest(unittest.TestCase):
         self.register()
         self.sign_in()
         response = self.profile_delete()
-        self.assertEqual(self.db.user.count(), 0)
+        self.assertEqual(User.objects.count(), 0)
         self.assertEqual(response.status_code, 302)
 
     def test_profile_delete_sign_in_required(self):
         self.register()
         self.sign_out()
         response = self.profile_delete()
-        self.assertEqual(self.db.user.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, 302)
 
     def test_profile_update_success(self):

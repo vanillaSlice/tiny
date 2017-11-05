@@ -6,6 +6,3 @@ class Default(object):
 class Test(Default):
     SECRET_KEY = "test secret key"
     MONGODB_URI = "mongomock://localhost:27017/tiny"
-
-class Local(Default):
-    SECRET_KEY = "local secret key"
