@@ -1,6 +1,7 @@
 from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, URL
+
 from .models import User
 
 class RegistrationForm(Form):

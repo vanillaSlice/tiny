@@ -1,26 +1,37 @@
 from datetime import datetime
+
 from flask import Blueprint, redirect, render_template, request, session, url_for
 from passlib.hash import sha256_crypt
+
 from .forms import RegistrationForm, SignInForm, UpdateProfileForm
 from .helpers import get_current_user, get_user, sign_in_required
 from .models import Comment, Post, User
 
 home = Blueprint("home", __name__, url_prefix="/")
 user = Blueprint("user", __name__, url_prefix="/user")
+post = Blueprint("post", __name__, url_prefix="/post")
+
+"""
+Home routes.
+"""
 
 @home.route("/")
 def index():
     return render_template("index.html")
 
+"""
+User routes.
+"""
+
 @user.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm(request.form)
     if request.method == "POST" and form.validate():
-        user = User(email=form.email.data,
-                    display_name=form.display_name.data,
-                    password=sha256_crypt.hash(form.password.data),
-                    joined=datetime.now()).save()
-        session["email"] = user.email
+        _user = User(email=form.email.data,
+                     display_name=form.display_name.data,
+                     password=sha256_crypt.hash(form.password.data),
+                     joined=datetime.now()).save()
+        session["email"] = _user.email
         return redirect(url_for("user.profile"))
     return render_template("register.html", form=form)
 
@@ -63,3 +74,10 @@ def profile_id(id):
     if not user:
         return redirect(url_for("home.index"))
     return render_template("profile.html", user=user)
+
+"""
+Post routes.
+"""
+@post.route("/new")
+def new():
+    return redirect(url_for("home.index"))

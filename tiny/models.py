@@ -4,19 +4,20 @@ from mongoengine import (CASCADE,
                          EmailField,
                          ListField,
                          ReferenceField,
-                         StringField)
+                         StringField,
+                         URLField)
 
 class User(Document):
     email = EmailField(unique=True)
     display_name = StringField()
     password = StringField()
-    avatar_url = StringField()
+    avatar_url = URLField()
     joined = DateTimeField()
 
 class Post(Document):
     author = ReferenceField(User, reverse_delete_rule=CASCADE)
     title = StringField()
-    image_url = StringField()
+    image_url = URLField()
     content = StringField()
     published = DateTimeField()
     edited = DateTimeField()
