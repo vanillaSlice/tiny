@@ -2,34 +2,38 @@ import os
 from flask import Flask
 from mongoengine import connect
 
-# create app instance
-APP = Flask(__name__, instance_relative_config=True)
+def create_app(config=None):
+    # create Flask app instance
+    _app = Flask(__name__)
 
-# # load default config
-# APP.config.from_object("config")
+    # load default config
+    _app.config.from_object("config.Default")
 
-# # load instance config from environment variable or instance config if not set
-# APP.config.from_pyfile(os.environ.get("TINY_SETTINGS") or "config.py", silent=True)
+    # load environment variables
+    _app.config.update(dict(
+        DEBUG=os.environ.get("DEBUG", _app.config["DEBUG"]).lower() == "true",
+        SECRET_KEY=os.environ.get("SECRET_KEY", _app.config["SECRET_KEY"]),
+        MONGODB_URI=os.environ.get("MONGODB_URI", _app.config["MONGODB_URI"])
+    ))
 
-APP.secret_key = os.environ.get("SECRET_KEY", "development key")
-db_name = os.environ.get("MONGODB_DB", "tiny")
-host = os.environ.get("MONGODB_HOST", "localhost")
-port = os.environ.get("MONGODB_PORT", 27017)
-username = os.environ.get("MONGODB_USERNAME", "")
-password = os.environ.get("MONGODB_PASSWORD", "")
+    # override with instance config
+    _app.config.from_object(config)
 
-# connect to database (authenticating if necessary)
-if username or password:
-    CONNECTION = connect(db_name,
-                         host=host,
-                         port=port,
-                         username=username,
-                         password=password)
-else:
-    CONNECTION = connect(db_name,
-                         host=host,
-                         port=port)
+    # connect to database
+    connect(host=_app.config["MONGODB_URI"])[__name__]
 
-DB = CONNECTION[db_name]
+    # register blueprints
+    from .views import home, user
+    _app.register_blueprint(home)
+    _app.register_blueprint(user)
 
-from tiny import views
+    # disable caching when debugging
+    if _app.debug:
+        @_app.after_request
+        def after_request(response):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Expires"] = 0
+            response.headers["Pragma"] = "no-cache"
+            return response
+
+    return _app

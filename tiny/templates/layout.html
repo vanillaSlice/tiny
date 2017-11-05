@@ -26,12 +26,12 @@
         </form>
         <div class="navbar-controls">
           {% if session.email %}
-            <a class="btn btn-link" href="/profile">Profile</a>
-            <a class="btn btn-link" href="/sign-out">Sign out</a>
+            <a class="btn btn-link" href="{{ url_for('user.profile') }}">Profile</a>
+            <a class="btn btn-link" href="{{ url_for('user.sign_out') }}">Sign out</a>
             <a class="btn btn-primary" href="/posts/new">New Post</a>
           {% else %}
-            <a class="btn btn-link" href="/sign-in">Sign in</a>
-            <a class="btn btn-primary" href="/register">Get started</a>
+            <a class="btn btn-link" href="{{ url_for('user.sign_in') }}">Sign in</a>
+            <a class="btn btn-primary" href="{{ url_for('user.register') }}">Get started</a>
           {% endif %}
         </div>
       </div>

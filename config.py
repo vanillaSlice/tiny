@@ -1,11 +1,11 @@
-"""
-Default configuration.
-"""
+class Default(object):
+    DEBUG = True
+    SECRET_KEY = "default secret key"
+    MONGODB_URI = "mongodb://localhost:27017/tiny"
 
-DEBUG = True
-SECRET_KEY = "default key"
-MONGODB_DB = "tiny"
-MONGODB_HOST = "localhost"
-MONGODB_PORT = 27017
-MONGODB_USERNAME = ""
-MONGODB_PASSWORD = ""
+class Test(Default):
+    SECRET_KEY = "test secret key"
+    MONGODB_URI = "mongomock://localhost:27017/tiny"
+
+class Local(Default):
+    SECRET_KEY = "local secret key"

@@ -7,7 +7,7 @@
     <img src="../static/default-avatar.png">
   {% endif %}
   <h1>{{ user.display_name }}</h1>
-  <form action="{{ url_for('profile_delete') }}" method="post">
+  <form action="{{ url_for('user.profile_delete') }}" method="post">
     <button type="submit">Delete</button>
   </form>
 {% endblock %}

@@ -1,8 +1,4 @@
-"""
-Starts up a development server.
-"""
+from tiny import create_app
 
-from tiny import APP
-
-if __name__ == "__main__":
-    APP.run(threaded=True)
+app = create_app()
+app.run()

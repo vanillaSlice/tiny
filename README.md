@@ -33,18 +33,14 @@ deactivate
 ```
 
 ## Configuration
-Create a file `instance/config.py`. Add the following properties:
+Export the following environment variables to override the defaults:
 * DEBUG - whether to print out debugging information
 * SECRET_KEY - the app's secret key
-* MONGODB_DB - the database name
-* MONGODB_HOST - the host running a MongoDB instance
-* MONGODB_PORT - the port of the MongoDB instance
-* MONGODB_USERNAME - username
-* MONGODB_PASSWORD - password
+* MONGODB_URI - the MongoDB instance URI
 
 ## Running Locally
 ```
-python run.py
+python local.py
 ```
 Then point your browser to [localhost:5000](http://localhost:5000).
 

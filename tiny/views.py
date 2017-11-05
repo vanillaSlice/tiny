@@ -1,25 +1,18 @@
 from datetime import datetime
-from flask import redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for
 from passlib.hash import sha256_crypt
-from . import APP
 from .forms import RegistrationForm, SignInForm, UpdateProfileForm
 from .helpers import get_current_user, get_user, sign_in_required
 from .models import Comment, Post, User
 
-# Disable caching when debugging
-if APP.debug:
-    @APP.after_request
-    def after_request(response):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        response.headers["Expires"] = 0
-        response.headers["Pragma"] = "no-cache"
-        return response
+home = Blueprint("home", __name__, url_prefix="/")
+user = Blueprint("user", __name__, url_prefix="/user")
 
-@APP.route("/")
+@home.route("/")
 def index():
     return render_template("index.html")
 
-@APP.route("/register", methods=["GET", "POST"])
+@user.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm(request.form)
     if request.method == "POST" and form.validate():
@@ -28,23 +21,23 @@ def register():
                     password=sha256_crypt.hash(form.password.data),
                     joined=datetime.now()).save()
         session["email"] = user.email
-        return redirect(url_for("profile"))
+        return redirect(url_for("user.profile"))
     return render_template("register.html", form=form)
 
-@APP.route("/sign-in", methods=["GET", "POST"])
+@user.route("/sign-in", methods=["GET", "POST"])
 def sign_in():
     form = SignInForm(request.form)
     if request.method == "POST" and form.validate():
         session["email"] = form.user.email
-        return redirect(request.args.get("next", None) or url_for("index"))
+        return redirect(request.args.get("next", None) or url_for("home.index"))
     return render_template("sign_in.html", form=form)
 
-@APP.route("/sign-out")
+@user.route("/sign-out")
 def sign_out():
     session.pop("email", None)
-    return redirect(url_for("index"))
+    return redirect(url_for("home.index"))
 
-@APP.route("/profile", methods=["GET", "POST"])
+@user.route("/profile", methods=["GET", "POST"])
 @sign_in_required
 def profile():
     user = get_current_user()
@@ -56,17 +49,17 @@ def profile():
         return render_template("profile.html", user=user)
     return render_template("profile.html", form=form, user=user)
 
-@APP.route("/profile/delete", methods=["GET"])
+@user.route("/profile/delete", methods=["GET"])
 @sign_in_required
 def profile_delete():
     user = get_current_user()
     if user:
         user.delete()
-    return redirect(url_for("sign_out"))
+    return redirect(url_for("user.sign_out"))
 
-@APP.route("/profile/<id>", methods=["GET"])
+@user.route("/profile/<id>", methods=["GET"])
 def profile_id(id):
     user = get_user(id)
     if not user:
-        return redirect(url_for("index"))
+        return redirect(url_for("home.index"))
     return render_template("profile.html", user=user)
