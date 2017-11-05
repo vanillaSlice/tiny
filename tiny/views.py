@@ -3,7 +3,7 @@ from flask import redirect, render_template, request, session, url_for
 from passlib.hash import sha256_crypt
 from . import APP
 from .forms import RegistrationForm, SignInForm, UpdateProfileForm
-from .helpers import get_user, sign_in_required
+from .helpers import get_current_user, get_user, sign_in_required
 from .models import Comment, Post, User
 
 # Disable caching when debugging
@@ -47,19 +47,26 @@ def sign_out():
 @APP.route("/profile", methods=["GET", "POST"])
 @sign_in_required
 def profile():
-    user = get_user()
+    user = get_current_user()
     form = UpdateProfileForm(request.form)
     if request.method == "POST" and form.validate():
         user.display_name = form.display_name.data
         user.avatar_url = form.avatar_url.data
         user.save()
+        return render_template("profile.html", user=user)
     return render_template("profile.html", form=form, user=user)
 
 @APP.route("/profile/delete", methods=["GET"])
 @sign_in_required
 def profile_delete():
-    user = get_user()
+    user = get_current_user()
     if user:
         user.delete()
-    session.pop("email", None)
-    return redirect(url_for("index"))
+    return redirect(url_for("sign_out"))
+
+@APP.route("/profile/<id>", methods=["GET"])
+def profile_id(id):
+    user = get_user(id)
+    if not user:
+        return redirect(url_for("index"))
+    return render_template("profile.html", user=user)

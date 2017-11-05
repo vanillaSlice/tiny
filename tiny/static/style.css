@@ -17,7 +17,7 @@ body {
 
 .btn-primary {
   color: #03a87c;
-  background-color: transparent;
+  background-color: #fff;
   border-color: #03a87c;
 }
 
@@ -27,7 +27,7 @@ body {
 .btn-primary:active:focus,
 .btn-primary:active:hover {
   color: #018f69;
-  background-color: transparent;
+  background-color: #fff;
   border-color: #029e74;
 }
 
@@ -60,6 +60,32 @@ body {
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   color: #292929;
+}
+
+.navbar-default form {
+  transform: translateX(90%);
+  transition: transform 0.2s linear;
+  z-index: 0;
+  display: inline-block;
+}
+
+.navbar-default form.expanded {
+  transform: translateX(0);
+}
+
+.navbar-header .form-control {
+  display: inline-block;
+  width: initial;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.navbar-controls {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+  background-color: #fff;
 }
 
 .navbar-default .btn-link {
