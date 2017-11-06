@@ -18,9 +18,7 @@
   <!-- fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rozha+One">
   <!-- site css -->
-  <link rel="stylesheet" href="../static/styles/layout.css">
-  <!-- template css -->
-  {% block stylesheets %}{% endblock %}
+  <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
   <!-- navigation -->
@@ -32,10 +30,10 @@
       <div class="navbar-header pull-right">
         <form class="hidden-xs hidden-sm">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <input type="text" class="form-control" placeholder="Search Tiny">
+          <input type="search" class="form-control" placeholder="Search Tiny" />
         </form>
         <div class="navbar-controls">
-          <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('user.profile') }}">
+          <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.index') }}">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </a>
           {% if session.email %}
@@ -61,8 +59,6 @@
   <!-- bootstrap js -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- site js -->
-  <script src="../static/scripts/layout.js"></script>
-  <!-- template js -->
-  {% block scripts %}{% endblock %}
+  <script src="../static/script.js"></script>
 </body>
 </html>

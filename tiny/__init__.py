@@ -24,10 +24,14 @@ def create_app(config=None):
     connect(host=app.config["MONGODB_URI"])[__name__]
 
     # register blueprints
-    from .views import home, user, post
+    from .views.home import home
+    from .views.user import user
+    from .views.post import post
+    from .views.search import search
     app.register_blueprint(home)
     app.register_blueprint(user)
     app.register_blueprint(post)
+    app.register_blueprint(search)
 
     # disable caching when debugging
     if app.debug:
