@@ -33,10 +33,12 @@ def create_app(config="config.Default"):
     from .views.home import home
     from .views.user import user
     from .views.post import post
+    from .views.comment import comment
     from .views.search import search
     app.register_blueprint(home)
     app.register_blueprint(user)
     app.register_blueprint(post)
+    app.register_blueprint(comment)
     app.register_blueprint(search)
 
     # disable caching when debugging
