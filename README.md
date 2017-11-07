@@ -43,7 +43,7 @@ Default configuration properties can be viewed in [config.py](config.py).
 
 ## Running Locally
 ```
-python local.py
+python run.py
 ```
 Then point your browser to [localhost:5000](http://localhost:5000).
 
