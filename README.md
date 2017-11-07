@@ -33,13 +33,13 @@ deactivate
 ```
 
 ## Configuration
-Export the following environment variables to override the defaults:
+The following properties can be configured:
 
 * DEBUG - whether to print out debugging information
 * SECRET_KEY - the app's secret key
 * MONGODB_URI - the MongoDB instance URI
 
-Default configuration properties can be viewed in [config.py](config.py).
+To change these properties you can export them as environment variables or create a file `instance/config.py` (note that any environment variables take precedence).
 
 ## Running Locally
 ```
