@@ -5,7 +5,10 @@ Initialises Tiny app and brings together all of the various components.
 import os
 
 from flask import Flask, render_template
+from flask_assets import Environment
 from mongoengine import connect
+
+from .assets import bundles
 
 def create_app(config="config.Default"):
     # create Flask app instance
@@ -40,6 +43,10 @@ def create_app(config="config.Default"):
     app.register_blueprint(post)
     app.register_blueprint(comment)
     app.register_blueprint(search)
+
+    # register asset bundles
+    assets = Environment(app)
+    assets.register(bundles)
 
     # disable caching when debugging
     if app.debug:

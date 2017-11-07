@@ -4,7 +4,7 @@
   {% if user.avatar_url %}
     <img src="{{ user.avatar_url }}">
   {% else %}
-    <img src="../static/default-avatar.png">
+    <img src="{{ url_for('static', filename='img/default-avatar.png') }}">
   {% endif %}
   <h1>{{ user.display_name }}</h1>
   <form action="{{ url_for('user.profile_delete') }}" method="post">

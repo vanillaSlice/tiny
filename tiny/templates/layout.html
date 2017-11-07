@@ -7,18 +7,20 @@
   <title>Tiny</title>
   <meta name="description" content="Read, write and comment on blog posts.">
   <!-- icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="../static/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon-16x16.png">
-  <link rel="manifest" href="../static/manifest.json">
-  <link rel="mask-icon" href="../static/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link rel="mask-icon" href="{{ url_for('static', filename='img/safari-pinned-tab.svg') }}" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
   <!-- bootstrap css -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <!-- fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rozha+One">
   <!-- site css -->
-  <link rel="stylesheet" href="../static/style.css">
+  {% assets "all_css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+  {% endassets %}
 </head>
 <body>
   <!-- navigation -->
@@ -59,6 +61,8 @@
   <!-- bootstrap js -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- site js -->
-  <script src="../static/script.js"></script>
+  {% assets "all_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 </body>
 </html>
