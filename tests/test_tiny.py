@@ -1,7 +1,6 @@
-import os
 from datetime import datetime
 import unittest
-from passlib.hash import sha256_crypt
+
 from tiny import create_app
 from tiny.models import Comment, Post, User
 
@@ -58,14 +57,6 @@ class TinyTest(unittest.TestCase):
     def get_mock_profile_update_form(self):
         return dict(display_name="John Smith",
                     avatar_url="http://www.example.com/avatar.jpg")
-
-    """
-    Index tests.
-    """
-
-    def test_index(self):
-        response = self.app.get("/")
-        self.assertEqual(response.status_code, 200)
 
     """
     Registration tests.
@@ -251,13 +242,22 @@ class TinyTest(unittest.TestCase):
         self.assertIsNone(user.avatar_url)
         self.assertEqual(response.status_code, 302)
 
-    """
-    Post tests.
-    """
+class HomeTest(TinyTest):
+    def test_index(self):
+        response = self.app.get("/")
+        self.assertEqual(response.status_code, 200)
 
-    """
-    Comment tests.
-    """
+class UserTest(TinyTest):
+    pass
+
+class PostTest(TinyTest):
+    pass
+
+class CommentTest(TinyTest):
+    pass
+
+class SearchTest(TinyTest):
+    pass
 
 if __name__ == "__main__":
     unittest.main()

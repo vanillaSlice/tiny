@@ -4,4 +4,4 @@ post = Blueprint("post", __name__, url_prefix="/post")
 
 @post.route("/new")
 def new():
-    return render_template("post_new.html")
+    return render_template("post/new.html")

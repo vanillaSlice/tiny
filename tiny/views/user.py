@@ -19,7 +19,7 @@ def register():
                      joined=datetime.now()).save()
         session["email"] = _user.email
         return redirect(url_for("user.profile"))
-    return render_template("register.html", form=form)
+    return render_template("user/register.html", form=form)
 
 @user.route("/sign-in", methods=["GET", "POST"])
 def sign_in():
@@ -27,7 +27,7 @@ def sign_in():
     if request.method == "POST" and form.validate():
         session["email"] = form.user.email
         return redirect(request.args.get("next", None) or url_for("home.index"))
-    return render_template("sign_in.html", form=form)
+    return render_template("user/sign_in.html", form=form)
 
 @user.route("/sign-out")
 def sign_out():
@@ -43,8 +43,8 @@ def profile():
         user.display_name = form.display_name.data
         user.avatar_url = form.avatar_url.data
         user.save()
-        return render_template("profile.html", user=user)
-    return render_template("profile.html", form=form, user=user)
+        return render_template("user/show.html", user=user)
+    return render_template("user/show.html", form=form, user=user)
 
 @user.route("/profile/delete", methods=["GET"])
 @sign_in_required
@@ -59,4 +59,4 @@ def profile_id(id):
     user = get_user(id)
     if not user:
         return redirect(url_for("home.index"))
-    return render_template("profile.html", user=user)
+    return render_template("user/show.html", user=user)

@@ -1,8 +1,10 @@
 from functools import wraps
+
 from flask import redirect, request, session, url_for
-from .models import User
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+
+from .models import User
 
 def sign_in_required(func):
     """
