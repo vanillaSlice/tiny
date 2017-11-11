@@ -1,62 +1,116 @@
 from datetime import datetime
 
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from passlib.hash import sha256_crypt
 
-from tiny.forms import RegistrationForm, SignInForm, UpdateProfileForm
-from tiny.helpers import get_current_user, get_user, sign_in_required
-from tiny.models import Comment, Post, User
+from tiny.forms import EditUserForm, SignInForm, SignUpForm
+from tiny.helpers import (get_current_user,
+                          get_user_from_id,
+                          is_signed_in,
+                          sign_in_required)
+from tiny.models import User
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
-@user.route("/register", methods=["GET", "POST"])
-def register():
-    form = RegistrationForm(request.form)
+@user.route("/sign-up", methods=["GET", "POST"])
+def sign_up():
+    # redirect to home page if already signed in
+    if is_signed_in():
+        return redirect(url_for("home.index"))
+
+    form = SignUpForm(request.form)
+
+    # register new user
     if request.method == "POST" and form.validate():
-        _user = User(email=form.email.data,
-                     display_name=form.display_name.data,
-                     password=sha256_crypt.hash(form.password.data),
-                     joined=datetime.now()).save()
-        session["email"] = _user.email
-        return redirect(url_for("user.profile"))
-    return render_template("user/register.html", form=form)
+        new_user = User(email=form.email.data,
+                        display_name=form.display_name.data,
+                        password=sha256_crypt.hash(form.password.data),
+                        joined=datetime.now()).save()
+
+        # make sure we store user session
+        session["id"] = str(new_user.id)
+        session["avatar_url"] = url_for("static", filename="img/default-avatar.png")
+
+        return redirect(url_for("user.show", id=session["id"]))
+
+    # render registration form
+    return render_template("user/sign_up.html", form=form)
 
 @user.route("/sign-in", methods=["GET", "POST"])
 def sign_in():
+    # redirect to home page if already signed in
+    if is_signed_in():
+        return redirect(url_for("home.index"))
+
     form = SignInForm(request.form)
+
+    # sign user in
     if request.method == "POST" and form.validate():
-        session["email"] = form.user.email
+        # make sure we store user session
+        session["id"] = str(form.user.id)
+        session["avatar_url"] = form.user.avatar_url or url_for("static", filename="img/default-avatar.png")
+
         return redirect(request.args.get("next", None) or url_for("home.index"))
+
+    # render sign in form
     return render_template("user/sign_in.html", form=form)
 
-@user.route("/sign-out")
+@user.route("/sign-out", methods=["GET", "POST"])
 def sign_out():
-    session.pop("email", None)
-    return redirect(url_for("home.index"))
+    # clear session i.e. sign user out
+    if request.method == "POST":
+        session.clear()
 
-@user.route("/profile", methods=["GET", "POST"])
+    # render sign out screen
+    return render_template("user/sign_out.html")
+
+@user.route("/delete", methods=["GET", "POST"])
 @sign_in_required
-def profile():
-    user = get_current_user()
-    form = UpdateProfileForm(request.form)
-    if request.method == "POST" and form.validate():
-        user.display_name = form.display_name.data
-        user.avatar_url = form.avatar_url.data
-        user.save()
-        return render_template("user/show.html", user=user)
-    return render_template("user/show.html", form=form, user=user)
+def delete():
+    # delete the user
+    if request.method == "POST":
+        get_current_user().delete()
 
-@user.route("/profile/delete", methods=["GET"])
-@sign_in_required
-def profile_delete():
-    user = get_current_user()
-    if user:
-        user.delete()
-    return redirect(url_for("user.sign_out"))
+        # make sure we clear the session
+        session.clear()
 
-@user.route("/profile/<id>", methods=["GET"])
-def profile_id(id):
-    user = get_user(id)
-    if not user:
         return redirect(url_for("home.index"))
+
+    # render delete screen
+    return render_template("user/delete.html")
+
+@user.route("/edit", methods=["GET", "POST"])
+@sign_in_required
+def edit():
+    form = EditUserForm(request.form)
+
+    # edit the user
+    if request.method == "POST" and form.validate():
+        current_user = get_current_user()
+        current_user.display_name = form.display_name.data
+        current_user.avatar_url = form.avatar_url.data
+        current_user.save()
+        flash("Profile successfully updated", "success")
+        return redirect(url_for("user.show"))
+
+    # render edit form
+    return render_template("user/edit.html", form=form)
+
+@user.route("/settings", methods=["GET"])
+@sign_in_required
+def settings():
+    return render_template("user/settings.html")
+
+@user.route("/show", methods=["GET"], defaults={"user_id": None})
+@user.route("/show/<user_id>", methods=["GET"])
+def show(user_id):
+    user = get_user_from_id(user_id)
+
+    # couldn't find user - redirect to home page
+    if user is None:
+        flash("Oops - we couldn't find that profile", "danger")
+        return redirect(url_for("home.index"))
+
+    user['id'] = str(user['id'])
+
     return render_template("user/show.html", user=user)

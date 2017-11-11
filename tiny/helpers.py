@@ -15,15 +15,21 @@ def sign_in_required(func):
         """
         Checks if user is signed in, if not redirect to sign in page.
         """
-        if session.get("email") is None:
+        if session.get("id") is None:
             return redirect(url_for("user.sign_in", next=request.url))
         return func(*args, **kwargs)
     return decorated_function
 
-def get_current_user():
-    return User.objects(email=session["email"]).first()
+def is_signed_in():
+    return session.get("id", None) != None
 
-def get_user(_id):
+def get_current_user():
+    return get_user_from_id(session.get("id", None))
+
+def get_user_from_email(email):
+    return User.objects(email=email).first()
+
+def get_user_from_id(_id):
     try:
         return User.objects(id=ObjectId(_id)).first()
     except InvalidId:

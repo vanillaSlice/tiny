@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  {% if session.id %}
+    <button type="button" class="sign-out">Sign out</button>
+  {% else %}
+    You have been signed out.
+  {% endif %}
+{% endblock %}

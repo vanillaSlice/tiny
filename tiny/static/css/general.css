@@ -1,0 +1,10 @@
+body {
+  background-color: #fff;
+  color: #292929;
+}
+
+.btn.active,
+.btn:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}

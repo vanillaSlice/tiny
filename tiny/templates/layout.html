@@ -29,30 +29,53 @@
       <div class="navbar-header pull-left">
         <a class="navbar-brand" href="{{ url_for('home.index') }}">Tiny</a>
       </div>
-      <div class="navbar-header pull-right">
-        <form class="hidden-xs hidden-sm">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <input type="search" class="form-control" placeholder="Search Tiny" />
-        </form>
-        <div class="navbar-controls">
-          <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.index') }}">
+      <div class="pull-right">
+        <div class="search-form-container hidden-xs hidden-sm">
+          <form class="search-form" action="{{ url_for('search.results') }}" method="get">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          </a>
-          {% if session.email %}
-            <a class="btn btn-link" href="{{ url_for('user.profile') }}">Profile</a>
-            <a class="btn btn-link hidden-xs" href="{{ url_for('user.sign_out') }}">Sign out</a>
-            <a class="btn btn-primary" href="{{ url_for('post.new') }}">New Post</a>
-          {% else %}
-            <a class="btn btn-link" href="{{ url_for('user.sign_in') }}">Sign in</a>
-            <a class="btn btn-primary" href="{{ url_for('user.register') }}">Get started</a>
-          {% endif %}
+            <input type="search" name="q" class="form-control search-input collapsed" placeholder="Search Tiny" />
+          </form>
         </div>
+        <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.results') }}">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </a>
+        {% if session.id %}
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <img class="avatar" src="{{ session.avatar_url }}" alt="User avatar">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="{{ url_for('post.new') }}">New Post</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="{{ url_for('user.show', user_id=session.id) }}">Profile</a></li>
+              <li><a href="{{ url_for('user.settings') }}">Settings</a></li>
+              <li><a href="{{ url_for('user.sign_out') }}" class="sign-out">Sign out</a></li>
+            </ul>
+          </div>
+        {% else %}
+          <a class="btn btn-link" href="{{ url_for('user.sign_in') }}">Sign in</a>
+          <a class="btn btn-primary" href="{{ url_for('user.sign_up') }}">Sign up</a>
+        {% endif %}
       </div>
     </div>
   </nav>
 
   <!-- page content -->
   <div class="container-fluid page-content">
+    <!-- flashes -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <!-- template content -->
     {% block content %}{% endblock %}
   </div>
 

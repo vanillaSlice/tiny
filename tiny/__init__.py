@@ -14,6 +14,9 @@ def create_app(config="config.Default"):
     # create Flask app instance
     app = Flask(__name__, instance_relative_config=True)
 
+    # do this so, for example, '/user/sign-in' and '/user/sign-in/' both resolve
+    app.url_map.strict_slashes = False
+
     # load config from parameter (using the default config if not present)
     app.config.from_object(config)
 

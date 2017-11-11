@@ -1,0 +1,15 @@
+/*
+ * Move these to somewhere more fitting
+ */
+
+.page-content {
+  margin-top: 80px;
+  max-width: 1030px;
+} 
+
+p {
+  font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
+  font-size: 21px;
+  letter-spacing: -0.063px;
+  line-height: 33.18px;
+}

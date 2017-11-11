@@ -2,9 +2,10 @@ from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, URL
 
+from .helpers import get_user_from_email
 from .models import User
 
-class RegistrationForm(Form):
+class SignUpForm(Form):
     email = StringField("Email", validators=[
         DataRequired(),
         Email()
@@ -24,7 +25,7 @@ class RegistrationForm(Form):
         if not Form.validate(self):
             return False
 
-        if User.objects(email=self.email.data).first():
+        if get_user_from_email(self.email.data):
             self.email.errors.append("There is already an account with that email")
             return False
 
@@ -47,7 +48,7 @@ class SignInForm(Form):
         if not Form.validate(self):
             return False
 
-        user = User.objects(email=self.email.data).first()
+        user = get_user_from_email(self.email.data)
 
         if not user:
             self.email.errors.append("There is no account with this email")
@@ -62,7 +63,7 @@ class SignInForm(Form):
 
         return True
 
-class UpdateProfileForm(Form):
+class EditUserForm(Form):
     display_name = StringField("Display Name", validators=[
         DataRequired(),
         Length(max=20)
