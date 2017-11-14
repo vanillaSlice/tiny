@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ ASSET_URL }}" />
   {% endassets %}
 </head>
-<body>
+<body class="{{ page_name }}">
   <!-- navigation -->
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
@@ -31,15 +31,15 @@
       </div>
       <div class="pull-right">
         <div class="search-form-container hidden-xs hidden-sm">
-          <form class="search-form" action="{{ url_for('search.results') }}" method="get">
+          <form class="search-form" action="{{ url_for('search.index') }}" method="get">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
             <input type="search" name="q" class="form-control search-input collapsed" placeholder="Search Tiny" />
           </form>
         </div>
-        <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.results') }}">
+        <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.index') }}">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </a>
-        {% if session.id %}
+        {% if session.user_id %}
           <div class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <img class="avatar" src="{{ session.avatar_url }}" alt="User avatar">
@@ -47,14 +47,14 @@
             <ul class="dropdown-menu dropdown-menu-right">
               <li><a href="{{ url_for('post.new') }}">New Post</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="{{ url_for('user.show', user_id=session.id) }}">Profile</a></li>
+              <li><a href="{{ url_for('user.show', user_id=session.user_id) }}">Profile</a></li>
               <li><a href="{{ url_for('user.settings') }}">Settings</a></li>
               <li><a href="{{ url_for('user.sign_out') }}" class="sign-out">Sign out</a></li>
             </ul>
           </div>
         {% else %}
           <a class="btn btn-link" href="{{ url_for('user.sign_in') }}">Sign in</a>
-          <a class="btn btn-primary" href="{{ url_for('user.sign_up') }}">Sign up</a>
+          <a class="btn btn-default" href="{{ url_for('user.sign_up') }}">Sign up</a>
         {% endif %}
       </div>
     </div>
@@ -76,13 +76,17 @@
       {% endif %}
     {% endwith %}
     <!-- template content -->
-    {% block content %}{% endblock %}
+    <div class="{{ page_name }}-page">
+      {% block content %}{% endblock %}
+    </div>
   </div>
 
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <!-- bootstrap js -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- lodash js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
   <!-- site js -->
   {% assets "all_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>

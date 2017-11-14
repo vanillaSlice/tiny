@@ -1,15 +1,20 @@
 {% extends 'layout.html' %}
 
+{% set page_name="user-show" %}
+
 {% block content %}
-  {% if user.avatar_url %}
-    <img src="{{ user.avatar_url }}">
-  {% else %}
-    <img src="{{ url_for('static', filename='img/default-avatar.png') }}">
-  {% endif %}
-  <h1>{{ user.display_name }}</h1>
-  {% if session['id'] == user.id %}
-    <form action="{{ url_for('user.delete') }}" method="post">
-      <button type="submit">Delete</button>
-    </form>
-  {% endif %}
+  <div class="row user-info">
+    <div class="col-xs-8">
+      <h1>{{ user.display_name }}</h1>
+      <span class="joined">Member since {{ user.joined.strftime('%b %d %Y') }}</span>
+    </div>
+    <div class="col-xs-4">
+      <img class="avatar" src="{{ user.avatar_url }}">
+    </div>
+  </div>
+  <hr />
+  <div class="posts row"></div>
+  <div class="text-center">
+    <button type="button" class="load-more btn btn-default">Load more</button>
+  </div>
 {% endblock %}

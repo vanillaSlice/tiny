@@ -1,5 +1,16 @@
 {% extends 'layout.html' %}
 
+{% from "_formhelpers.html" import render_field %}
+
+{% set page_name="post-new" %}
+
 {% block content %}
-  New post.
+  <h1>New Post</h1>
+  <form action="{{ url_for('post.new') }}" method="post">
+    {{ render_field(form.title, placeholder="Title") }}
+    {{ render_field(form.introduction, placeholder="Introduction") }}
+    {{ render_field(form.image_url, placeholder="Image URL") }}
+    {{ render_field(form.content, placeholder="Content") }}
+    <button type="submit" class="btn btn-default">Create</button>
+  </form>
 {% endblock %}

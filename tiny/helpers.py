@@ -1,10 +1,12 @@
+"""
+Exports reusable helper functions.
+"""
+
 from functools import wraps
 
 from flask import redirect, request, session, url_for
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-
-from .models import User
 
 def sign_in_required(func):
     """
@@ -15,22 +17,21 @@ def sign_in_required(func):
         """
         Checks if user is signed in, if not redirect to sign in page.
         """
-        if session.get("id") is None:
+        if session.get("user_id") is None:
             return redirect(url_for("user.sign_in", next=request.url))
         return func(*args, **kwargs)
     return decorated_function
 
-def is_signed_in():
-    return session.get("id", None) != None
-
-def get_current_user():
-    return get_user_from_id(session.get("id", None))
-
-def get_user_from_email(email):
-    return User.objects(email=email).first()
-
-def get_user_from_id(_id):
+def is_valid_object_id(value):
     try:
-        return User.objects(id=ObjectId(_id)).first()
+        ObjectId(value)
+        return True
     except InvalidId:
-        return None
+        return False
+
+def is_int(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False

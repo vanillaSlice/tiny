@@ -1,5 +1,23 @@
 {% extends "layout.html" %}
 
+{% set page_name="user-settings" %}
+
 {% block content %}
-  Settings.
+  <h1>Settings</h1>
+  <div class="list-group">
+    <a href="{{ url_for('user.update_profile') }}" class="list-group-item">
+      <h4 class="list-group-item-heading">Update Profile</h4>
+      <p class="list-group-item-text">Change display name and avatar.</p>
+    </a>
+    <a href="{{ url_for('user.update_password') }}" class="list-group-item">
+      <h4 class="list-group-item-heading">Update Password</h4>
+      <p class="list-group-item-text">Update password for this account.</p>
+    </a>
+  </div>
+  <div class="list-group">
+    <a href="{{ url_for('user.delete') }}" class="list-group-item list-group-item-danger">
+      <h4 class="list-group-item-heading">Delete Account</h4>
+      <p class="list-group-item-text">Delete account and all of your content.</p>
+    </a>
+  </div>
 {% endblock %}

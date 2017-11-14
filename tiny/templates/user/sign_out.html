@@ -1,9 +1,28 @@
 {% extends "layout.html" %}
 
+{% set page_name="user-sign-out" %}
+
 {% block content %}
-  {% if session.id %}
-    <button type="button" class="sign-out">Sign out</button>
+  {% if session.user_id %}
+    <p>
+      To sign out of Tiny, please <a class="sign-out link" href="{{ url_for('user.sign_out') }}">click here</a>.
+    </p>
   {% else %}
-    You have been signed out.
+    <p>You&apos;ve been signed out.</p>
+    <p>
+      <a class="btn btn-default" href="{{ url_for('home.index') }}">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        Tiny Home
+      </a>
+    </p>
+    <p>
+      or
+    </p>
+    <p>
+      <a class="btn btn-default" href="{{ url_for('user.sign_in') }}">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        Sign in again
+      </a>
+    </p>
   {% endif %}
 {% endblock %}

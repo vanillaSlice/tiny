@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 
+{% set page_name="user-delete" %}
+
 {% block content %}
-  Delete.
+  <h1>Delete your account</h1>
+  <p>
+    This will delete your account, all blog posts and comments.
+  </p>
+  <form action="{{ url_for('user.delete') }}" method="post">
+    <button class="btn btn-danger">Delete my account</button>
+    <a class="link" href="{{ url_for('user.settings') }}">Cancel</a>
+  </form>
 {% endblock %}

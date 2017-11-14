@@ -1,3 +1,10 @@
+"""
+Contains default and test config properties. To add local instance
+config properties create a file 'instance/config.py' or export the
+properties as environment variables (note that environment variables
+will take precedence).
+"""
+
 class Default(object):
     DEBUG = True
     SECRET_KEY = "default secret key"

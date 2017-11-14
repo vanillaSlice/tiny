@@ -1,5 +1,5 @@
 """
-Contains assets to bundle together for UI.
+Exports asset bundles to be used in the UI.
 """
 
 from flask_assets import Bundle

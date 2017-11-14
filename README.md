@@ -1,8 +1,8 @@
 # Tiny
-A small blog app built with Flask. A deployed version can be viewed [here](https://enigmatic-spire-44057.herokuapp.com/).
+A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://enigmatic-spire-44057.herokuapp.com/).
 
 ## Development Environment
-Install virtualenv to create an isolated environment:
+Install [virtualenv](https://virtualenv.pypa.io/en/stable/#) to create an isolated environment:
 ```
 sudo pip install virtualenv
 ```
@@ -12,7 +12,7 @@ Create virtual environment:
 virtualenv venv
 ```
 
-To activate the environment:
+Activate the environment:
 ```
 . venv/bin/activate
 ```
@@ -22,12 +22,12 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-To save list of dependencies in virtual environment:
+To save list of dependencies:
 ```
 pip freeze > requirements.txt
 ```
 
-To deactivate the environment:
+To deactivate the environment when finished:
 ```
 deactivate
 ```
@@ -49,6 +49,11 @@ Then point your browser to [localhost:5000](http://localhost:5000).
 
 ## Testing
 ```
+python -m unittest
+```
+
+You may get deprecation warnings because [mongoengine](http://mongoengine.org/) uses deprecated methods under the hood. You can hide these by running:
+
+```
 python -W ignore::DeprecationWarning -m unittest
 ```
-(Ignoring deprecation warnings because [mongoengine](http://mongoengine.org/) is using deprecated methods under the hood)

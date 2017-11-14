@@ -1,5 +1,5 @@
 """
-Initialises Tiny app and brings together all of the various components.
+Exports a function to create an instance of Tiny app.
 """
 
 import os
@@ -11,21 +11,18 @@ from mongoengine import connect
 from .assets import bundles
 
 def create_app(config="config.Default"):
-    # create Flask app instance
+    # create the app instance
     app = Flask(__name__, instance_relative_config=True)
-
-    # do this so, for example, '/user/sign-in' and '/user/sign-in/' both resolve
-    app.url_map.strict_slashes = False
 
     # load config from parameter (using the default config if not present)
     app.config.from_object(config)
 
-    # not testing so load in other config properties
+    # load instance config and environment variables if not testing
     if not app.config["TESTING"]:
-        # override with instance config (if present)
+        # load instance config (if present)
         app.config.from_pyfile("config.py", silent=True)
 
-        # load environment variables
+        # load environment variables (if present)
         app.config.update(dict(
             DEBUG=os.environ.get("DEBUG", str(app.config["DEBUG"])).lower() == "true",
             SECRET_KEY=os.environ.get("SECRET_KEY", app.config["SECRET_KEY"]),
@@ -35,12 +32,15 @@ def create_app(config="config.Default"):
     # connect to database
     connect(host=app.config["MONGODB_URI"])[__name__]
 
+    # disable strict trailing slashes i.e. so /user/sign-in and /user/sign-in/ both resolve
+    app.url_map.strict_slashes = False
+
     # register blueprints
-    from .views.home import home
-    from .views.user import user
-    from .views.post import post
-    from .views.comment import comment
-    from .views.search import search
+    from .blueprints.home import home
+    from .blueprints.user import user
+    from .blueprints.post import post
+    from .blueprints.comment import comment
+    from .blueprints.search import search
     app.register_blueprint(home)
     app.register_blueprint(user)
     app.register_blueprint(post)
@@ -51,6 +51,11 @@ def create_app(config="config.Default"):
     assets = Environment(app)
     assets.register(bundles)
 
+    # attach 404 error handler
+    @app.errorhandler(404)
+    def handle_404(error):
+        return render_template("404.html", error=error), 404
+
     # disable caching when debugging
     if app.debug:
         @app.after_request
@@ -59,10 +64,5 @@ def create_app(config="config.Default"):
             response.headers["Expires"] = 0
             response.headers["Pragma"] = "no-cache"
             return response
-
-    # attach 404 error handler
-    @app.errorhandler(404)
-    def handle_404(error):
-        return render_template("404.html"), 404
 
     return app

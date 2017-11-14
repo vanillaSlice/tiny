@@ -1,9 +1,7 @@
 """
-Creates an instance of Tiny app.
-
-This app will be run locally if using 'python run.py'.
-When deploying to Heroku, Gunicorn is used and does not
-use the Flask development server.
+Exports an instance of Tiny app. If run with 'python run.py',
+the Flask development server will start running the app on
+'localhost:5000'.
 """
 
 from tiny import create_app
