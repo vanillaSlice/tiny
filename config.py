@@ -11,6 +11,5 @@ class Default(object):
     MONGODB_URI = "mongodb://localhost:27017/tiny"
 
 class Test(Default):
-    TESTING = True
     SECRET_KEY = "test secret key"
-    MONGODB_URI = "mongomock://localhost:27017/tiny"
+    MONGODB_URI = "mongodb://localhost:27017/tiny_test"

@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% set body_classes="post show" %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <img class="img-responsive" src="{{ post.image_url }}">
+  <p>{{ post.content }}</p>
+{% endblock %}

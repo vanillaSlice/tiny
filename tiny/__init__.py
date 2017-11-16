@@ -10,41 +10,41 @@ from mongoengine import connect
 
 from .assets import bundles
 
-def create_app(config="config.Default"):
-    # create the app instance
+def create_app(testing=False):
     app = Flask(__name__, instance_relative_config=True)
 
-    # load config from parameter (using the default config if not present)
-    app.config.from_object(config)
+    if testing:
+        # load test configuration
+        app.config.from_object("config.Test")
+    else:
+        # load default configuration
+        app.config.from_object("config.Default")
 
-    # load instance config and environment variables if not testing
-    if not app.config["TESTING"]:
         # load instance config (if present)
         app.config.from_pyfile("config.py", silent=True)
 
         # load environment variables (if present)
-        app.config.update(dict(
-            DEBUG=os.environ.get("DEBUG", str(app.config["DEBUG"])).lower() == "true",
-            SECRET_KEY=os.environ.get("SECRET_KEY", app.config["SECRET_KEY"]),
-            MONGODB_URI=os.environ.get("MONGODB_URI", app.config["MONGODB_URI"])
-        ))
+        app.config.update({
+            "DEBUG": os.environ.get("DEBUG", str(app.config["DEBUG"])).lower() == "true",
+            "SECRET_KEY": os.environ.get("SECRET_KEY", app.config["SECRET_KEY"]),
+            "MONGODB_URI": os.environ.get("MONGODB_URI", app.config["MONGODB_URI"])
+        })
 
     # connect to database
-    connect(host=app.config["MONGODB_URI"])[__name__]
+    connect(host=app.config["MONGODB_URI"])
 
-    # disable strict trailing slashes i.e. so /user/sign-in and /user/sign-in/ both resolve
+    # disable strict trailing slashes i.e. so /user/sign-in and /user/sign-in/ both
+    # resolve to same endpoint
     app.url_map.strict_slashes = False
 
     # register blueprints
     from .blueprints.home import home
     from .blueprints.user import user
     from .blueprints.post import post
-    from .blueprints.comment import comment
     from .blueprints.search import search
     app.register_blueprint(home)
     app.register_blueprint(user)
     app.register_blueprint(post)
-    app.register_blueprint(comment)
     app.register_blueprint(search)
 
     # register asset bundles

@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% from "_formhelpers.html" import render_field %}
+
+{% set page_name="post create" %}
+
+{% block content %}
+  <div class="form-header-plain text-center">
+    <h1>New post</h1>
+  </div>
+  <form action="{{ url_for('post.create') }}" method="post">
+    {{ render_field(form.title, placeholder="Title") }}
+    {{ render_field(form.preview, placeholder="Preview") }}
+    {{ render_field(form.image_url, placeholder="Image URL") }}
+    {{ render_field(form.content, placeholder="Content") }}
+    <button type="submit" class="btn btn-default btn-block">Publish</button>
+  </form>
+{% endblock %}
+

@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 
-{% set page_name="_404" %}
+{% set body_classes="_404" %}
 
 {% block content %}
-  <h1>404</h1>
-  <h2>Page Not Found :(</h2>
-  <a class="btn btn-default" href="{{ url_for('home.index') }}">
-    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-    Take Me Home
-  </a>
+  <div class="text-center">
+    <h1>404</h1>
+    <h2>We couldn&apos;t find this page.</h2>
+    <form class="search-form" action="{{ url_for('search.index') }}" method="get">
+      <input type="search" name="terms" class="form-control search-input" placeholder="Search Tiny" />
+    </form>
+    <a class="btn btn-default btn-block" href="{{ url_for('home.index') }}">
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      Take me home
+    </a>
+  </div>
 {% endblock %}

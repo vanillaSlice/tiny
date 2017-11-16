@@ -1,33 +1,33 @@
 # Tiny
-A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://enigmatic-spire-44057.herokuapp.com/).
+A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://enigmatic-spire-44057.herokuapp.com/). **If you set up an account, please use a dummy email address and password.**
 
-## Development Environment
-Install [virtualenv](https://virtualenv.pypa.io/en/stable/#) to create an isolated environment:
+## Getting Started
+Install [virtualenv](https://virtualenv.pypa.io/en/stable/#) to create an isolated environment by running:
 ```
 sudo pip install virtualenv
 ```
 
-Create virtual environment:
+Create a new virtual environment:
 ```
 virtualenv venv
 ```
 
-Activate the environment:
+Activate the virtual environment:
 ```
 . venv/bin/activate
 ```
 
-Install dependencies:
+Install app dependencies:
 ```
 pip install -r requirements.txt
 ```
 
-To save list of dependencies:
+If you install any additional dependencies in the virtual environment, you should probably save them using:
 ```
 pip freeze > requirements.txt
 ```
 
-To deactivate the environment when finished:
+To deactivate the virtual environment when finished:
 ```
 deactivate
 ```
@@ -37,7 +37,7 @@ The following properties can be configured:
 
 * DEBUG - whether to print out debugging information
 * SECRET_KEY - the app's secret key
-* MONGODB_URI - the MongoDB instance URI
+* MONGODB_URI - the URI of the MongoDB instance storing app data
 
 To change these properties you can export them as environment variables or create a file `instance/config.py` (note that any environment variables take precedence).
 

@@ -4,9 +4,9 @@ Exports reusable helper functions.
 
 from functools import wraps
 
-from flask import redirect, request, session, url_for
-from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from bson.objectid import ObjectId
+from flask import redirect, request, session, url_for
 
 def sign_in_required(func):
     """
@@ -21,6 +21,14 @@ def sign_in_required(func):
             return redirect(url_for("user.sign_in", next=request.url))
         return func(*args, **kwargs)
     return decorated_function
+
+def del_none(d):
+    for key, value in list(d.items()):
+        if value is None:
+            del d[key]
+        elif isinstance(value, dict):
+            del_none(value)
+    return d
 
 def is_valid_object_id(value):
     try:

@@ -1,6 +1,5 @@
 {% macro render_field(field) %}
   <div class="form-group {{'has-error' if field.errors }}">
-    {{ field.label(class_="control-label") }}
     {{ field(class_="form-control",**kwargs)|safe }}
     {% if field.errors %}
       <ul class="help-block">

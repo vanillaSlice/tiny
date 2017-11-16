@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ ASSET_URL }}" />
   {% endassets %}
 </head>
-<body class="{{ page_name }}">
+<body class="{{ body_classes }}">
   <!-- navigation -->
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
@@ -32,11 +32,11 @@
       <div class="pull-right">
         <div class="search-form-container hidden-xs hidden-sm">
           <form class="search-form" action="{{ url_for('search.index') }}" method="get">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            <input type="search" name="q" class="form-control search-input collapsed" placeholder="Search Tiny" />
+            <span class="search-btn glyphicon glyphicon-search" aria-hidden="true"></span>
+            <input type="search" name="terms" class="form-control search-input collapsed" placeholder="Search Tiny" />
           </form>
         </div>
-        <a class="btn btn-link hidden-md hidden-lg" href="{{ url_for('search.index') }}">
+        <a class="btn btn-link search-btn hidden-md hidden-lg" href="{{ url_for('search.index') }}">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </a>
         {% if session.user_id %}
@@ -45,7 +45,7 @@
               <img class="avatar" src="{{ session.avatar_url }}" alt="User avatar">
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="{{ url_for('post.new') }}">New Post</a></li>
+              <li><a href="{{ url_for('post.create') }}">New Post</a></li>
               <li role="separator" class="divider"></li>
               <li><a href="{{ url_for('user.show', user_id=session.user_id) }}">Profile</a></li>
               <li><a href="{{ url_for('user.settings') }}">Settings</a></li>
@@ -61,7 +61,7 @@
   </nav>
 
   <!-- page content -->
-  <div class="container-fluid page-content">
+  <div class="container-fluid page">
     <!-- flashes -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -76,7 +76,7 @@
       {% endif %}
     {% endwith %}
     <!-- template content -->
-    <div class="{{ page_name }}-page">
+    <div class="page-content">
       {% block content %}{% endblock %}
     </div>
   </div>
@@ -87,6 +87,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- lodash js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <!-- showdown js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.2/showdown.min.js"></script>
   <!-- site js -->
   {% assets "all_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
