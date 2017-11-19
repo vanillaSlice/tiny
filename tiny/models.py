@@ -1,30 +1,52 @@
 """
 Exports Tiny app data models.
 """
-
 from datetime import datetime
 
+from flask import url_for
 from mongoengine import (CASCADE,
                          DateTimeField,
                          Document,
                          EmailField,
                          ReferenceField,
-                         StringField)
+                         StringField,
+                         URLField)
 
-from tiny.helpers import del_none
+"""
+Private helpers functions.
+"""
+
+def __delete_none__(d):
+    for key, value in list(d.items()):
+        if value is None:
+            del d[key]
+        elif isinstance(value, dict):
+            __delete_none__(value)
+    return d
+
+def __default_avatar_img_path__():
+    return url_for("static", filename="img/default-avatar.jpg", _external=True)
+
+def __default_post_img_path__():
+    return url_for("static", filename="img/default-post.jpg", _external=True)
+
+"""
+Model definitions.
+"""
 
 class User(Document):
-    email = EmailField(required=True, unique=True)
+    email = EmailField(unique=True, required=True)
     password = StringField(required=True)
     display_name = StringField(required=True, min_length=1, max_length=20)
     bio = StringField(max_length=160)
-    avatar_url = StringField(required=True, default="/static/img/default-avatar.jpg")
+    avatar_url = URLField(required=True, default=__default_avatar_img_path__)
     created = DateTimeField(required=True, default=datetime.now)
 
     # for text search
     meta = {
         "indexes": [
             {
+                "default_language": "english",
                 "fields": ["$display_name"]
             }
         ]
@@ -32,7 +54,7 @@ class User(Document):
 
     def serialize(self):
         # we don't want to expose the user's email or password
-        return del_none({
+        return __delete_none__({
             "id": str(self.id),
             "display_name": self.display_name,
             "bio": self.bio,
@@ -44,7 +66,7 @@ class Post(Document):
     author = ReferenceField(User, required=True, reverse_delete_rule=CASCADE)
     title = StringField(required=True, min_length=1, max_length=100)
     preview = StringField(max_length=100)
-    image_url = StringField(required=True, default="/static/img/default-post.jpg")
+    image_url = StringField(required=True, default=__default_post_img_path__)
     content = StringField(required=True, min_length=1, max_length=10_000)
     created = DateTimeField(required=True, default=datetime.now)
     last_updated = DateTimeField()
@@ -54,14 +76,14 @@ class Post(Document):
         "indexes": [
             {
                 "default_language": "english",
-                "fields": ["$author", "$title", "$preview", "$content"],
+                "fields": ["$title", "$preview", "$content", "$author"],
                 "weights": {"title": 10, "preview": 5, "content": 2, "author": 1}
             }
         ]
     }
 
     def serialize(self):
-        return del_none({
+        return __delete_none__({
             "id": str(self.id),
             "author": self.author.serialize() if self.author else None,
             "title": self.title,
@@ -79,7 +101,7 @@ class Comment(Document):
     created = DateTimeField(required=True, default=datetime.now)
 
     def serialize(self):
-        return del_none({
+        return __delete_none__({
             "id": str(self.id),
             "author": self.author.serialize() if self.author else None,
             "post": self.post.serialize() if self.post else None,

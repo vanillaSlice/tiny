@@ -6,18 +6,19 @@ import os
 
 from flask import Flask, render_template
 from flask_assets import Environment
-from mongoengine import connect
+from flask_mongoengine import MongoEngine
 
 from .assets import bundles
+from .helpers import markdown_to_html
 
 def create_app(testing=False):
     app = Flask(__name__, instance_relative_config=True)
 
     if testing:
-        # load test configuration
+        # load test config
         app.config.from_object("config.Test")
     else:
-        # load default configuration
+        # load default config
         app.config.from_object("config.Default")
 
         # load instance config (if present)
@@ -25,13 +26,18 @@ def create_app(testing=False):
 
         # load environment variables (if present)
         app.config.update({
-            "DEBUG": os.environ.get("DEBUG", str(app.config["DEBUG"])).lower() == "true",
-            "SECRET_KEY": os.environ.get("SECRET_KEY", app.config["SECRET_KEY"]),
-            "MONGODB_URI": os.environ.get("MONGODB_URI", app.config["MONGODB_URI"])
+            "DEBUG": os.environ.get("DEBUG", str(app.config.get("DEBUG"))).lower() == "true",
+            "SECRET_KEY": os.environ.get("SECRET_KEY", app.config.get("SECRET_KEY")),
+            "SERVER_NAME": os.environ.get("SERVER_NAME", app.config.get("SERVER_NAME")),
+            "MONGODB_DB": os.environ.get("MONGODB_DB", app.config.get("MONGODB_DB")),
+            "MONGODB_HOST": os.environ.get("MONGODB_HOST", app.config.get("MONGODB_HOST")),
+            "MONGODB_PORT": os.environ.get("MONGODB_PORT", app.config.get("MONGODB_PORT")),
+            "MONGODB_USERNAME": os.environ.get("MONGODB_USERNAME", app.config.get("MONGODB_USERNAME")),
+            "MONGODB_PASSWORD": os.environ.get("MONGODB_PASSWORD", app.config.get("MONGODB_PASSWORD"))
         })
 
     # connect to database
-    connect(host=app.config["MONGODB_URI"])
+    MongoEngine(app)
 
     # disable strict trailing slashes i.e. so /user/sign-in and /user/sign-in/ both
     # resolve to same endpoint
@@ -50,6 +56,15 @@ def create_app(testing=False):
     # register asset bundles
     assets = Environment(app)
     assets.register(bundles)
+
+    # register filters
+    @app.template_filter("markdown_to_html")
+    def markdown_to_html_filter(s):
+        return markdown_to_html(s)
+
+    @app.template_filter("format_date")
+    def format_date_filter(s):
+        return s.strftime('%b %d %Y')
 
     # attach 404 error handler
     @app.errorhandler(404)

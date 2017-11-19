@@ -2,18 +2,28 @@
 
 {% from "_formhelpers.html" import render_field %}
 
-{% set page_name="post create" %}
+{% set body_classes="post create" %}
 
 {% block content %}
   <div class="form-header-plain text-center">
     <h1>New post</h1>
   </div>
-  <form action="{{ url_for('post.create') }}" method="post">
-    {{ render_field(form.title, placeholder="Title") }}
-    {{ render_field(form.preview, placeholder="Preview") }}
-    {{ render_field(form.image_url, placeholder="Image URL") }}
-    {{ render_field(form.content, placeholder="Content") }}
-    <button type="submit" class="btn btn-default btn-block">Publish</button>
-  </form>
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active" ><a href="#1a" data-toggle="tab">Edit</a></li>
+    <li role="presentation"><a href="#2a" id="preview-select" data-toggle="tab">Preview</a></li>
+  </ul>
+  <div class="tab-content clearfix">
+    <div class="tab-pane active" id="1a">
+        <form action="{{ url_for('post.create') }}" method="post">
+            {{ render_field(form.title, show_label=True, placeholder="Title") }}
+            {{ render_field(form.preview, show_label=True, placeholder="Preview") }}
+            {{ render_field(form.image_url, show_label=True, placeholder="Image URL") }}
+            {{ render_field(form.content, show_label=True, placeholder="Content") }}
+            <button type="submit" class="btn btn-default btn-block">Publish</button>
+          </form>
+    </div>
+    <div class="tab-pane" id="2a" class="preview">
+    </div>
+  </div>
 {% endblock %}
 

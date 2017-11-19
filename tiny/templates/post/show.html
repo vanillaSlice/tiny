@@ -5,5 +5,5 @@
 {% block content %}
   <h1>{{ post.title }}</h1>
   <img class="img-responsive" src="{{ post.image_url }}">
-  <p>{{ post.content }}</p>
+  {{ post.content | markdown_to_html | safe }}
 {% endblock %}

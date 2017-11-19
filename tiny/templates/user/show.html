@@ -9,7 +9,7 @@
       {% if user.bio %}
         <p class="bio">{{ user.bio }}</p>
       {% endif %}
-      <p class="created">Member since {{ user.created.strftime('%b %d %Y') }}</p>
+      <p class="created">Member since {{ user.created | format_date }}</p>
     </div>
     <div class="col-xs-4">
       <img class="avatar" src="{{ user.avatar_url }}">

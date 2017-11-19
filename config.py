@@ -8,8 +8,12 @@ will take precedence).
 class Default(object):
     DEBUG = True
     SECRET_KEY = "default secret key"
-    MONGODB_URI = "mongodb://localhost:27017/tiny"
+    SERVER_NAME = "localhost:5000"
+    MONGODB_DB = "tiny"
+    MONGODB_HOST = "localhost"
+    MONGODB_PORT = 27017
+    MONGODB_USERNAME = ""
+    MONGODB_PASSWORD = ""
 
 class Test(Default):
-    SECRET_KEY = "test secret key"
-    MONGODB_URI = "mongodb://localhost:27017/tiny_test"
+    MONGODB_DB = "tiny_test"

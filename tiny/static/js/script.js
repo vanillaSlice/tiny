@@ -106,7 +106,7 @@ $(document).ready(function() {
       // make sure we hide load button
       var loadMore = $('.load-more').addClass('hidden');
 
-      var url = '/search/query?size=' + size + '&offset=' + offset;
+      var url = '/post/latest?limit=' + size + '&skip=' + offset;
 
       $.get(url, function(results) {
         postsDiv = $('.posts');
@@ -127,7 +127,7 @@ $(document).ready(function() {
         if (results.length == size) {
           loadMore.removeClass('hidden');
         }
-      });
+      }, 'json');
     }
   
     // initial first load
@@ -171,7 +171,7 @@ $(document).ready(function() {
         if (results.length == size) {
           loadMore.removeClass('hidden');
         }
-      });
+      }, 'json');
     }
   
     // initial first load
@@ -195,7 +195,7 @@ $(document).ready(function() {
       // make sure we hide load button
       var loadMore = $('.load-more').addClass('hidden');
 
-      var url = '/search/query?terms=' + terms + '&size=' + size + '&offset=' + offset;
+      var url = '/search?terms=' + terms + '&limit=' + size + '&skip=' + offset;
 
       $.get(url, function(results) {
         postsDiv = $('.posts');
@@ -216,7 +216,7 @@ $(document).ready(function() {
         if (results.length == size) {
           loadMore.removeClass('hidden');
         }
-      });
+      }, 'json');
     }
   
     // initial first load
@@ -243,6 +243,16 @@ $(document).ready(function() {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  if ($(document.body).hasClass('post')) {
+    $('#preview-select').click(function() {
+      $.post('/post/preview', {
+        'content': $('#content').val()
+      }, function(e) {
+        $('#2a').empty().append(e.html);
+      });
+    });
   }
 
 });

@@ -35,9 +35,16 @@ deactivate
 ## Configuration
 The following properties can be configured:
 
-* DEBUG - whether to print out debugging information
-* SECRET_KEY - the app's secret key
-* MONGODB_URI - the URI of the MongoDB instance storing app data
+* DEBUG - (default is `True`)
+* SECRET_KEY - (default is `default secret key`)
+* SERVER_NAME - (default is `localhost:5000`)
+* MONGODB_DB - (default is `tiny`)
+* MONGODB_HOST - (default is `localhost`)
+* MONGODB_PORT - (default is `27017`)
+* MONGODB_USERNAME - (default is empty)
+* MONGODB_PASSWORD - (default is empty)
+
+URI style connections are also supported, just supply the URI as `MONGODB_HOST` (note that URI properties will take precedence).
 
 To change these properties you can export them as environment variables or create a file `instance/config.py` (note that any environment variables take precedence).
 
