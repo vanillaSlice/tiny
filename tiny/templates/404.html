@@ -6,10 +6,10 @@
   <div class="text-center">
     <h1>404</h1>
     <h2>We couldn&apos;t find this page.</h2>
-    <form class="search-form" action="{{ url_for('search.index') }}" method="get">
+    <form class="search-form search-form-lg" action="{{ url_for('search.index') }}" method="get">
       <input type="search" name="terms" class="form-control search-input" placeholder="Search Tiny" />
     </form>
-    <a class="btn btn-default btn-block" href="{{ url_for('home.index') }}">
+    <a class="btn btn-primary btn-block" href="{{ url_for('home.index') }}">
       <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
       Take me home
     </a>

@@ -4,14 +4,13 @@
 
 {% block content %}
   <div class="text-center">
-    <div class="form-header-plain">
+    <div class="form-header plain">
       <h1>Delete account</h1>
       This will delete your account, all blog posts and comments.
     </div>
     <form action="{{ url_for('user.delete') }}" method="post">
       <div class="form-group">
         <button class="btn btn-danger btn-block">
-          <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
           Delete my account
         </button>
       </div>

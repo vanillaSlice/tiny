@@ -12,7 +12,7 @@ from mongoengine.queryset.visitor import Q
 
 from .models import Comment, Post, User
 
-markdown = Markdown(escape=True, hard_wrap=True)
+markdown = Markdown(hard_wrap=True)
 
 def sign_in_required(func):
     """
@@ -23,6 +23,7 @@ def sign_in_required(func):
     def decorated_function(*args, **kwargs):
         current_user = get_current_user()
         if not current_user:
+            session.clear()
             return redirect(url_for("user.sign_in", next=request.url))
         kwargs["current_user"] = current_user
         return func(*args, **kwargs)

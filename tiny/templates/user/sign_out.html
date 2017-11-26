@@ -5,21 +5,21 @@
 {% block content %}
   <div class="text-center">
     {% if session.user_id %}
-      <div class="page-header-plain text-center">
+      <div class="page-header plain text-center">
         <h1>Sign out</h1>
       </div>
       <p>
         To sign out of Tiny, please <a class="sign-out" href="{{ url_for('user.sign_out') }}">click here</a>.
       </p>
     {% else %}
-      <div class="page-header-plain text-center">
+      <div class="page-header plain text-center">
         <h1>You&apos;ve been signed out</h1>
       </div>
-      <a class="btn btn-default" href="{{ url_for('home.index') }}">
+      <a class="btn btn-primary" href="{{ url_for('home.index') }}">
         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
         Tiny home
       </a>
-      <a class="btn btn-default" href="{{ url_for('user.sign_in') }}">
+      <a class="btn btn-primary" href="{{ url_for('user.sign_in') }}">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         Sign in again
       </a>

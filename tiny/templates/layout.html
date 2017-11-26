@@ -30,19 +30,17 @@
         <a class="navbar-brand" href="{{ url_for('home.index') }}">Tiny</a>
       </div>
       <div class="pull-right">
-        <div class="search-form-container hidden-xs hidden-sm">
-          <form class="search-form" action="{{ url_for('search.index') }}" method="get">
-            <span class="search-btn glyphicon glyphicon-search" aria-hidden="true"></span>
-            <input type="search" name="terms" class="form-control search-input collapsed" placeholder="Search Tiny" />
-          </form>
-        </div>
+        <form class="search-form hidden-xs hidden-sm" action="{{ url_for('search.index') }}" method="get">
+          <span class="search-btn glyphicon glyphicon-search" aria-hidden="true"></span>
+          <input type="search" name="terms" class="form-control search-input collapsed" placeholder="Search Tiny" />
+        </form>
         <a class="btn btn-link search-btn hidden-md hidden-lg" href="{{ url_for('search.index') }}">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </a>
         {% if session.user_id %}
           <div class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <img class="avatar" src="{{ session.avatar_url }}" alt="User avatar">
+              <img class="avatar" src="{{ session.avatar_url }}" alt="Avatar">
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
               <li><a href="{{ url_for('post.create') }}">New Post</a></li>
@@ -54,14 +52,13 @@
           </div>
         {% else %}
           <a class="btn btn-link" href="{{ url_for('user.sign_in') }}">Sign in</a>
-          <a class="btn btn-default" href="{{ url_for('user.sign_up') }}">Sign up</a>
+          <a class="btn btn-primary" href="{{ url_for('user.sign_up') }}">Sign up</a>
         {% endif %}
       </div>
     </div>
   </nav>
 
-  <!-- page content -->
-  <div class="container-fluid page">
+  <div class="container-fluid page-container">
     <!-- flashes -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -76,19 +73,21 @@
       {% endif %}
     {% endwith %}
     <!-- template content -->
-    <div class="page-content">
+    <div class="page">
       {% block content %}{% endblock %}
     </div>
   </div>
 
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- jQuery dotdotdot -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.dotdotdot/3.1.0/jquery.dotdotdot.js"></script>
   <!-- bootstrap js -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- bootstrap validator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
   <!-- lodash js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-  <!-- showdown js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.2/showdown.min.js"></script>
   <!-- site js -->
   {% assets "all_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>

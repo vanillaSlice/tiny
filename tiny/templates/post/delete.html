@@ -4,13 +4,12 @@
 
 {% block content %}
 <div class="text-center">
-  <div class="form-header-plain">
-    <h1>Delete your post <em>{{ post.title }}</em>?</h1>
+  <div class="form-header plain">
+    <h1>Delete your post, &#8220;{{ post.title }}&#8221;?</h1>
   </div>
   <form action="{{ url_for('post.delete', post_id=post.id) }}" method="post">
     <div class="form-group">
       <button class="btn btn-danger btn-block">
-        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
         Delete post
       </button>
     </div>
@@ -22,4 +21,3 @@
   </form>
 </div>
 {% endblock %}
-

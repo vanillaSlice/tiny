@@ -9,7 +9,6 @@ from flask_assets import Environment
 from flask_mongoengine import MongoEngine
 
 from .assets import bundles
-from .helpers import markdown_to_html
 
 def create_app(testing=False):
     app = Flask(__name__, instance_relative_config=True)
@@ -58,10 +57,6 @@ def create_app(testing=False):
     assets.register(bundles)
 
     # register filters
-    @app.template_filter("markdown_to_html")
-    def markdown_to_html_filter(s):
-        return markdown_to_html(s)
-
     @app.template_filter("format_date")
     def format_date_filter(s):
         return s.strftime('%b %d %Y')

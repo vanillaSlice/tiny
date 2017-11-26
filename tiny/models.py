@@ -1,6 +1,7 @@
 """
 Exports Tiny app data models.
 """
+
 from datetime import datetime
 
 from flask import url_for
@@ -13,7 +14,7 @@ from mongoengine import (CASCADE,
                          URLField)
 
 """
-Private helpers functions.
+Private helper functions.
 """
 
 def __delete_none__(d):
@@ -37,7 +38,7 @@ Model definitions.
 class User(Document):
     email = EmailField(unique=True, required=True)
     password = StringField(required=True)
-    display_name = StringField(required=True, min_length=1, max_length=20)
+    display_name = StringField(required=True, min_length=1, max_length=50)
     bio = StringField(max_length=160)
     avatar_url = URLField(required=True, default=__default_avatar_img_path__)
     created = DateTimeField(required=True, default=datetime.now)
@@ -64,8 +65,8 @@ class User(Document):
 
 class Post(Document):
     author = ReferenceField(User, required=True, reverse_delete_rule=CASCADE)
-    title = StringField(required=True, min_length=1, max_length=100)
-    preview = StringField(max_length=100)
+    title = StringField(required=True, min_length=1, max_length=160)
+    lead_paragraph = StringField(max_length=500)
     image_url = StringField(required=True, default=__default_post_img_path__)
     content = StringField(required=True, min_length=1, max_length=10_000)
     created = DateTimeField(required=True, default=datetime.now)
@@ -76,8 +77,8 @@ class Post(Document):
         "indexes": [
             {
                 "default_language": "english",
-                "fields": ["$title", "$preview", "$content", "$author"],
-                "weights": {"title": 10, "preview": 5, "content": 2, "author": 1}
+                "fields": ["$title", "$lead_paragraph", "$content", "$author"],
+                "weights": {"title": 10, "lead_paragraph": 5, "content": 2, "author": 1}
             }
         ]
     }
@@ -87,7 +88,7 @@ class Post(Document):
             "id": str(self.id),
             "author": self.author.serialize() if self.author else None,
             "title": self.title,
-            "preview": self.preview,
+            "lead_paragraph": self.lead_paragraph,
             "image_url": self.image_url,
             "content": self.content,
             "created": self.created,
@@ -97,7 +98,7 @@ class Post(Document):
 class Comment(Document):
     author = ReferenceField(User, required=True, reverse_delete_rule=CASCADE)
     post = ReferenceField(Post, required=True, reverse_delete_rule=CASCADE)
-    text = StringField(required=True, min_length=1, max_length=320)
+    text = StringField(required=True, min_length=1, max_length=500)
     created = DateTimeField(required=True, default=datetime.now)
 
     def serialize(self):

@@ -13,6 +13,7 @@ class TestCase(unittest.TestCase):
         # set up test app instance
         self.app = create_app(testing=True)
         self.app.app_context().push()
+        self.app.config["WTF_CSRF_ENABLED"] = False
         self.client = self.app.test_client()
 
         # make sure we start with a clean database
@@ -70,7 +71,7 @@ class TestCase(unittest.TestCase):
 
         return Post(author=author,
                     title=self.random_string(10),
-                    preview=self.random_string(10),
+                    lead_paragraph=self.random_string(10),
                     image_url=self.random_url(),
                     content=self.random_string(10))
 
@@ -108,7 +109,7 @@ class TestCase(unittest.TestCase):
 
     def get_mock_post_data(self):
         return {"title": self.random_string(10),
-                "preview": self.random_string(10),
+                "lead_paragraph": self.random_string(10),
                 "image_url": self.random_url(),
                 "content": self.random_string(10)}
 
@@ -175,7 +176,7 @@ class UserTest(TestCase):
     def test_sign_up_display_name_too_long(self):
         self.sign_out()
         data = self.get_mock_sign_up_data()
-        data["display_name"] = self.random_string(21)
+        data["display_name"] = self.random_string(51)
         self.assert_sign_up_unsuccessful(data=data)
 
     def test_sign_up_display_name_length_equal_to_minimum(self):
@@ -187,7 +188,7 @@ class UserTest(TestCase):
     def test_sign_up_display_name_length_equal_to_maximum(self):
         self.sign_out()
         data = self.get_mock_sign_up_data()
-        data["display_name"] = self.random_string(20)
+        data["display_name"] = self.random_string(50)
         self.assert_sign_up_successful(data=data)
 
     def test_sign_up_no_password_and_confirmation(self):
@@ -205,26 +206,10 @@ class UserTest(TestCase):
         data["confirmation"] = password
         self.assert_sign_up_unsuccessful(data=data)
 
-    def test_sign_up_password_and_confirmation_too_long(self):
-        self.sign_out()
-        data = self.get_mock_sign_up_data()
-        password = self.random_string(21)
-        data["password"] = password
-        data["confirmation"] = password
-        self.assert_sign_up_unsuccessful(data=data)
-
     def test_sign_up_password_and_confirmation_length_equal_to_minimum(self):
         self.sign_out()
         data = self.get_mock_sign_up_data()
         password = self.random_string(6)
-        data["password"] = password
-        data["confirmation"] = password
-        self.assert_sign_up_successful(data=data)
-
-    def test_sign_up_password_and_confirmation_length_equal_to_maximum(self):
-        self.sign_out()
-        data = self.get_mock_sign_up_data()
-        password = self.random_string(20)
         data["password"] = password
         data["confirmation"] = password
         self.assert_sign_up_successful(data=data)
@@ -283,6 +268,12 @@ class UserTest(TestCase):
     def test_sign_in_account_does_not_exist(self):
         self.sign_out()
         data = self.get_mock_sign_in_data()
+        self.assert_sign_in_unsuccessful(data=data)
+
+    def test_sign_in_no_password(self):
+        self.sign_out()
+        data = self.get_mock_sign_in_data()
+        data["password"] = ""
         self.assert_sign_in_unsuccessful(data=data)
 
     def test_sign_in_incorrect_password(self):
@@ -368,7 +359,7 @@ class UserTest(TestCase):
 
     def test_update_profile_display_name_too_long(self):
         data = self.get_mock_update_profile_data()
-        data["display_name"] = self.random_string(21)
+        data["display_name"] = self.random_string(51)
         self.assert_update_profile_unsuccessful(data=data)
 
     def test_update_profile_display_name_length_equal_to_minimum(self):
@@ -378,7 +369,7 @@ class UserTest(TestCase):
 
     def test_update_profile_display_name_length_equal_to_maximum(self):
         data = self.get_mock_update_profile_data()
-        data["display_name"] = self.random_string(20)
+        data["display_name"] = self.random_string(50)
         self.assert_update_profile_successful(data=data)
 
     def test_update_profile_no_avatar_url(self):
@@ -429,7 +420,12 @@ class UserTest(TestCase):
         response = self.client.get("/user/update-password")
         self.assertEqual(response.status_code, 200)
 
-    def test_update_password_incorrect_password(self):
+    def test_update_password_no_current_password(self):
+        data = self.get_mock_update_password_data()
+        data["current_password"] = ""
+        self.assert_update_password_unsuccessful(data=data)
+
+    def test_update_password_incorrect_current_password(self):
         data = self.get_mock_update_password_data()
         data["current_password"] = "incorrect"
         self.assert_update_password_unsuccessful(data=data)
@@ -449,26 +445,10 @@ class UserTest(TestCase):
         data["confirmation"] = password
         self.assert_update_password_unsuccessful(data=data)
 
-    def test_update_password_new_password_and_confirmation_too_long(self):
-        data = self.get_mock_update_password_data()
-        data["current_password"] = self.password
-        password = self.random_string(21)
-        data["new_password"] = password
-        data["confirmation"] = password
-        self.assert_update_password_unsuccessful(data=data)
-
     def test_update_password_new_password_and_confirmation_length_equal_to_minimum(self):
         data = self.get_mock_update_password_data()
         data["current_password"] = self.password
         password = self.random_string(6)
-        data["new_password"] = password
-        data["confirmation"] = password
-        self.assert_update_password_successful(data=data)
-
-    def test_update_password_new_password_and_confirmation_length_equal_to_maximum(self):
-        data = self.get_mock_update_password_data()
-        data["current_password"] = self.password
-        password = self.random_string(20)
         data["new_password"] = password
         data["confirmation"] = password
         self.assert_update_password_successful(data=data)
@@ -544,7 +524,7 @@ class PostTest(TestCase):
         post = Post.objects.first()
         self.assertEqual(post.author.id, self.user.id)
         self.assertEqual(post.title, data["title"])
-        self.assertEqual(post.preview, data["preview"])
+        self.assertEqual(post.lead_paragraph, data["lead_paragraph"])
         self.assertEqual(post.image_url, data["image_url"])
         self.assertEqual(post.content, data["content"])
         self.assertIsNotNone(post.created)
@@ -571,7 +551,7 @@ class PostTest(TestCase):
 
     def test_create_title_too_long(self):
         data = self.get_mock_post_data()
-        data["title"] = self.random_string(101)
+        data["title"] = self.random_string(161)
         self.assert_create_unsuccessful(data=data)
 
     def test_create_title_length_equal_to_minimum(self):
@@ -581,17 +561,17 @@ class PostTest(TestCase):
 
     def test_create_title_length_equal_to_maximum(self):
         data = self.get_mock_post_data()
-        data["title"] = self.random_string(100)
+        data["title"] = self.random_string(160)
         self.assert_create_successful(data=data)
 
-    def test_create_preview_too_long(self):
+    def test_create_lead_paragraph_too_long(self):
         data = self.get_mock_post_data()
-        data["preview"] = self.random_string(101)
+        data["lead_paragraph"] = self.random_string(501)
         self.assert_create_unsuccessful(data=data)
 
-    def test_create_preview_length_equal_to_maximum(self):
+    def test_create_lead_paragraph_length_equal_to_maximum(self):
         data = self.get_mock_post_data()
-        data["preview"] = self.random_string(100)
+        data["lead_paragraph"] = self.random_string(500)
         self.assert_create_successful(data=data)
 
     def test_create_no_image_url(self):
@@ -708,7 +688,7 @@ class PostTest(TestCase):
         post = Post.objects(id=str(post.id)).first()
         self.assertEqual(post.author.id, self.user.id)
         self.assertEqual(post.title, data["title"])
-        self.assertEqual(post.preview, data["preview"])
+        self.assertEqual(post.lead_paragraph, data["lead_paragraph"])
         self.assertEqual(post.image_url, data["image_url"])
         self.assertEqual(post.content, data["content"])
         self.assertIsNotNone(post.created)
@@ -835,7 +815,7 @@ class PostTest(TestCase):
     def test_create_comment_text_too_long(self):
         post = self.get_mock_post().save()
         data = self.get_mock_comment_data()
-        data["text"] = self.random_string(321)
+        data["text"] = self.random_string(501)
         response = self.client.post("/post/{}/comment".format(str(post.id)), data=data)
         self.assertEqual(response.status_code, 400)
 
@@ -852,7 +832,7 @@ class PostTest(TestCase):
 
     def test_create_comment_text_length_equal_to_maximum(self):
         post = self.get_mock_post().save()
-        data = {"text": self.random_string(320)}
+        data = {"text": self.random_string(500)}
         response = self.client.post("/post/{}/comment".format(str(post.id)), data=data)
         comment = Comment.objects(post=post.id).first()
         self.assertEqual(comment.author, self.user)

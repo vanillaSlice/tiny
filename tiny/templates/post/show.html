@@ -1,9 +1,61 @@
 {% extends "layout.html" %}
 
+{% from "_formhelpers.html" import render_field %}
+
 {% set body_classes="post show" %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <img class="img-responsive" src="{{ post.image_url }}">
+  <div class="post-info">
+    <div class="wrapper">
+      <a href="{{ url_for('user.show', user_id=post.author.id) }}">
+        <img class="avatar" src="{{ post.author.avatar_url }}">
+      </a>
+    </div>
+    <div class="wrapper">
+      <a class="author-name" href="{{ url_for('user.show', user_id=post.author.id) }}">
+        {{ post.author.display_name }}
+      </a>
+      {% if post.author.bio %}
+        <span class="bio">
+          {{ post.author.bio }}
+        </span>
+      {% endif %}
+      <span class="date">{{ post.created | format_date }}
+        {% if post.last_updated %}
+          (last updated {{ post.last_updated | format_date }})
+        {% endif %}
+      </span>
+    </div>
+  </div>
+  <h1>
+    {% if is_author %}
+      <small>
+        <a href="{{ url_for('post.settings', post_id=post.id) }}">
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+      </small>
+    {% endif %}
+    {{ post.title }}
+  </h1>
+  <p class="lead">{{ post.lead_paragraph }}</p>
+  <img class="post-img" src="{{ post.image_url }}">
   {{ post.content | markdown_to_html | safe }}
+  <div class="comment-section">
+    {% if session.user_id %}
+      <form class="comment-form" action="{{ url_for('post.comment', post_id=post.id) }}" method="post">
+        {{ form.csrf_token }}
+        {{ render_field(form.text, show_label=False, maxlength=500, rows=4, placeholder="Leave a comment ...") }}
+        <div class="form-group">
+          <button class="btn btn-primary btn-block">Send</button>
+        </div>
+      </form>
+    {% else %}
+      <strong><a href="{{ url_for('user.sign_in', next=url_for('post.show', post_id=post.id)) }}">Sign in</a>
+        to leave a comment.</strong>
+    {% endif %}
+    <div class="comments row"></div>
+    <div class="text-center">
+      <button type="button" class="load-more-comments hidden btn btn-primary">Load more</button>
+    </div>
+  </div>
 {% endblock %}

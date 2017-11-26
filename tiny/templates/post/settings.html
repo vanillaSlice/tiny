@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% set body_classes="post settings" %}
+
+{% block content %}
+  <div class="text-center">
+    <div class="page-header plain">
+      <h1>Settings for your post, &#8220;{{ post.title }}&#8221;</h1>
+    </div>
+    <div class="list-group">
+      <a href="{{ url_for('post.update', post_id=post.id) }}" class="list-group-item">
+        <h2 class="list-group-item-heading">Update Post</h2>
+        <p class="list-group-item-text">Make amendments to your post.</p>
+      </a>
+    </div>
+    <div class="list-group">
+      <a href="{{ url_for('post.delete', post_id=post.id) }}" class="list-group-item list-group-item-danger">
+        <h2 class="list-group-item-heading">Delete Post</h2>
+        <p class="list-group-item-text">Delete post and all comments left.</p>
+      </a>
+    </div>
+    <a class="btn btn-default btn-block" href="{{ url_for('post.show', post_id=post.id) }}">
+      Back to post
+    </a>
+  </div>
+{% endblock %}

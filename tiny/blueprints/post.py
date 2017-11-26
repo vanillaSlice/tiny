@@ -10,6 +10,7 @@ from flask import (Blueprint,
                    redirect,
                    render_template,
                    request,
+                   session,
                    url_for)
 
 from tiny.helpers import (author_required,
@@ -24,20 +25,32 @@ from tiny.models import Comment, Post
 
 post = Blueprint("post", __name__, url_prefix="/post")
 
+"""
+Post filters.
+"""
+
+@post.app_template_filter("markdown_to_html")
+def markdown_to_html_filter(s):
+    return markdown_to_html(s)
+
+"""
+Post routes.
+"""
+
 @post.route("/create", methods=["GET", "POST"])
 @sign_in_required
 def create(current_user):
     # parse the form
-    form = PostForm(request.form)
+    form = PostForm(request.form, obj=Post())
 
     # render create post form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
+    if request.method == "GET" or not form.validate_on_submit():
         return render_template("post/create.html", form=form)
 
     # create new post
     new_post = Post(author=current_user,
                     title=form.title.data,
-                    preview=form.preview.data,
+                    lead_paragraph=form.lead_paragraph.data,
                     image_url=form.image_url.data,
                     content=form.content.data).save()
 
@@ -50,14 +63,17 @@ def create(current_user):
 @post.route("/<post_id>/show", methods=["GET"])
 @post_required
 def show(post_id, selected_post):
-    return render_template("post/show.html", post=selected_post)
+    return render_template("post/show.html",
+                           form=CommentForm(),
+                           post=selected_post,
+                           is_author=str(selected_post.author.id) == session.get("user_id"))
 
 @post.route("/<post_id>/settings", methods=["GET"])
 @sign_in_required
 @post_required
 @author_required
 def settings(current_user, post_id, selected_post):
-    return render_template("post/settings.html", post_id=post_id)
+    return render_template("post/settings.html", post=selected_post)
 
 @post.route("/<post_id>/update", methods=["GET", "POST"])
 @sign_in_required
@@ -65,11 +81,11 @@ def settings(current_user, post_id, selected_post):
 @author_required
 def update(current_user, post_id, selected_post):
     # parse the form
-    form = PostForm(request.form, selected_post)
+    form = PostForm(request.form, obj=selected_post)
 
     # render update post form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
-        return render_template("post/update.html", form=form, post_id=post_id)
+    if request.method == "GET" or not form.validate_on_submit():
+        return render_template("post/update.html", form=form, post=selected_post)
 
     # update the post information
     form.populate_obj(selected_post)
@@ -137,8 +153,12 @@ def comment(current_user, post_id, selected_post):
     form = CommentForm(request.form)
 
     # form is not valid so return error
-    if not form.validate():
-        return jsonify({"error message": str(form.text.errors)}), 400
+    if not form.validate_on_submit():
+        errors = []
+        for field_name, field_errors in form.errors.items():
+            for error in field_errors:
+                errors.append(error)
+        return jsonify({"errors": errors, "success": False}), 400
 
     # create the comment
     Comment(author=current_user,

@@ -2,36 +2,37 @@
 Exports forms used in Tiny app.
 """
 
+from flask_wtf import FlaskForm
 from passlib.hash import sha256_crypt
-from wtforms import Form, PasswordField, StringField, TextAreaField
+from wtforms import PasswordField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, URL
 
 from .helpers import get_user
 
-class SignUpForm(Form):
+class SignUpForm(FlaskForm):
     email = StringField("Email", validators=[
-        DataRequired("Email is required."),
+        DataRequired(),
         Email()
     ])
 
     display_name = StringField("Display Name", validators=[
-        DataRequired("Display Name is required."),
-        Length(min=1, max=20, message="Display Name must be between 1 and 20 characters long.")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        Length(min=1, max=50)
+    ])
 
     password = PasswordField("Password", validators=[
-        DataRequired("Password is required."),
-        Length(min=6, max=20, message="Password must be between 6 and 20 characters long."),
-        EqualTo("confirmation", message="Passwords must match")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        Length(min=6),
+        EqualTo("confirmation", message="Password and Confirmation must match")
+    ])
 
     confirmation = PasswordField("Confirmation", validators=[
-        DataRequired("Confirmation is required."),
-        EqualTo("password", message="Passwords must match")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        EqualTo("password", message="Password and Confirmation must match")
+    ])
 
-    def validate(self):
-        if not Form.validate(self):
+    def validate_on_submit(self):
+        if not super().validate_on_submit():
             return False
 
         if get_user(email=self.email.data):
@@ -40,31 +41,28 @@ class SignUpForm(Form):
 
         return True
 
-class SignInForm(Form):
+class SignInForm(FlaskForm):
     email = StringField("Email", validators=[
-        DataRequired("Email is required."),
+        DataRequired(),
         Email()
     ])
 
     password = PasswordField("Password", validators=[
-        DataRequired("Password is required.")
-    ], render_kw={"maxlength": "20"})
+        DataRequired()
+    ])
 
     def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.user = None
 
-    def validate(self):
-        if not Form.validate(self):
+    def validate_on_submit(self):
+        if not super().validate_on_submit():
             return False
 
         user = get_user(email=self.email.data)
 
-        if not user:
-            self.email.errors.append("There is no account with this email.")
-            return False
-
-        if not sha256_crypt.verify(self.password.data, user.password):
+        if not user or not sha256_crypt.verify(self.password.data, user.password):
+            self.email.errors.append("Incorrect email.")
             self.password.errors.append("Incorrect password.")
             return False
 
@@ -72,44 +70,43 @@ class SignInForm(Form):
 
         return True
 
-class UpdateProfileForm(Form):
+class UpdateProfileForm(FlaskForm):
     display_name = StringField("Display Name", validators=[
-        DataRequired("Display Name is required."),
-        Length(min=1, max=20, message="Display Name must be between 1 and 20 characters long.")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        Length(min=1, max=50)
+    ])
 
     avatar_url = StringField("Avatar URL", validators=[
-        DataRequired("Avatar URL is required."),
+        DataRequired(),
         URL(require_tld=False)
     ])
 
     bio = TextAreaField("Bio", validators=[
-        Length(max=160, message="Bio cannot be longer than 160 characters.")
-    ], render_kw={"maxlength": "160"})
+        Length(max=160)
+    ])
 
-class UpdatePasswordForm(Form):
+class UpdatePasswordForm(FlaskForm):
     current_password = PasswordField("Current Password", validators=[
-        DataRequired("Current Password is required."),
-        Length(min=6, max=20, message="Current Password must be between 6 and 20 characters long.")
-    ], render_kw={"maxlength": "20"})
+        DataRequired()
+    ])
 
     new_password = PasswordField("New Password", validators=[
-        DataRequired("New Password is required."),
-        EqualTo("confirmation", message="Passwords must match"),
-        Length(min=6, max=20, message="New Password must be between 6 and 20 characters long.")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        Length(min=6),
+        EqualTo("confirmation", message="New Password and Confirmation must match")
+    ])
 
     confirmation = PasswordField("Confirmation", validators=[
-        DataRequired("Confirmation is required."),
-        EqualTo("new_password", message="Passwords must match")
-    ], render_kw={"maxlength": "20"})
+        DataRequired(),
+        EqualTo("new_password", message="New Password and Confirmation must match")
+    ])
 
     def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.user = kwargs["user"]
 
-    def validate(self):
-        if not Form.validate(self):
+    def validate_on_submit(self):
+        if not super().validate_on_submit():
             return False
 
         if not sha256_crypt.verify(self.current_password.data, self.user.password):
@@ -118,28 +115,28 @@ class UpdatePasswordForm(Form):
 
         return True
 
-class PostForm(Form):
+class PostForm(FlaskForm):
     title = StringField("Title", validators=[
-        DataRequired("Title is required."),
-        Length(min=1, max=100, message="Title must be between 1 and 100 characters long.")
-    ], render_kw={"maxlength": "100"})
+        DataRequired(),
+        Length(min=1, max=160)
+    ])
 
-    preview = TextAreaField("Preview", validators=[
-        Length(max=100, message="Preview cannot be longer than 100 characters.")
-    ], render_kw={"maxlength": "100"})
+    lead_paragraph = TextAreaField("Lead Paragraph", validators=[
+        Length(max=500)
+    ])
 
     image_url = StringField("Image URL", validators=[
-        DataRequired("Image URL is required."),
+        DataRequired(),
         URL(require_tld=False)
     ])
 
     content = TextAreaField("Content", validators=[
-        DataRequired("Content is required."),
-        Length(min=1, max=10_000, message="Content must be between 1 and 10,000 characters long.")
-    ], render_kw={"maxlength": "10000"})
+        DataRequired(),
+        Length(min=1, max=10_000)
+    ])
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     text = TextAreaField("Text", validators=[
-        DataRequired("Text is required."),
-        Length(min=1, max=320, message="Comment must be between 1 and 320 characters long.")
-    ], render_kw={"maxlength": "320"})
+        DataRequired("Comment text is required"),
+        Length(min=1, max=500, message="Comment must be between 1 and 500 characters long.")
+    ])

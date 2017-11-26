@@ -22,6 +22,10 @@ from tiny.models import User
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
+"""
+User routes.
+"""
+
 @user.route("/sign-up", methods=["GET", "POST"])
 @sign_out_required
 def sign_up():
@@ -29,7 +33,7 @@ def sign_up():
     form = SignUpForm(request.form)
 
     # render sign up form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
+    if request.method == "GET" or not form.validate_on_submit():
         return render_template("user/sign_up.html", form=form)
 
     # save new user
@@ -54,7 +58,7 @@ def sign_in():
     form = SignInForm(request.form)
 
     # render sign in form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
+    if request.method == "GET" or not form.validate_on_submit():
         return render_template("user/sign_in.html", form=form)
 
     # make sure we store user id and avatar url in session
@@ -90,10 +94,10 @@ def settings(current_user):
 @sign_in_required
 def update_profile(current_user):
     # parse the form
-    form = UpdateProfileForm(request.form, current_user)
+    form = UpdateProfileForm(request.form, obj=current_user)
 
     # render update profile form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
+    if request.method == "GET" or not form.validate_on_submit():
         return render_template("user/update_profile.html", form=form)
 
     # update the user information
@@ -116,7 +120,7 @@ def update_password(current_user):
     form = UpdatePasswordForm(request.form, user=current_user)
 
     # render update password form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate():
+    if request.method == "GET" or not form.validate_on_submit():
         return render_template("user/update_password.html", form=form)
 
     # update password

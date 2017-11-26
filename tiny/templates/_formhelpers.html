@@ -1,15 +1,32 @@
-{% macro render_field(field, show_label=False) %}
+{% macro render_field(field, show_label=True, top_help=None, bottom_help=None) %}
   <div class="form-group {{'has-error' if field.errors }}">
     {% if show_label %}
-      {{ field.label }}
+      {{ field.label(class_="control-label") }}
     {% endif %}
-    {{ field(class_="form-control",**kwargs)|safe }}
-    {% if field.errors %}
-      <ul class="help-block">
-        {% for error in field.errors %}
-          <li>{{ error }}</li>
+    {% if top_help %}
+      <div class="help-block">
+        {{ top_help | safe }}
+      </div>
+    {% endif %}
+    {{ field(class_="form-control", **kwargs) | safe }}
+    <div class="help-block with-errors">
+      {% if bottom_help %}
+        {{ bottom_help }}
+      {% endif %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_form_errors(form) %}
+  {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      <ul class="errors">
+        {% for field_name, field_errors in form.errors.items() %}
+          {% for error in field_errors %}
+            <li>{{ form[field_name].label }}: {{ error }}</li>
+          {% endfor %}
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 {% endmacro %}

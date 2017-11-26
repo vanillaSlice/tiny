@@ -1,18 +1,41 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
-{% from "_formhelpers.html" import render_field %}
+{% from "_formhelpers.html" import render_field, render_form_errors %}
 
-{% set page_name="post update" %}
+{% set body_classes="post update" %}
 
 {% block content %}
-  <div class="form-header-plain text-center">
-    <h1>Update post</h1>
+  <div class="form-header plain text-center">
+    <h1>Update your post, &#8220;{{ post.title }}&#8221;</h1>
   </div>
-  <form action="{{ url_for('post.update', post_id=post_id) }}" method="post">
-    {{ render_field(form.title, placeholder="Title") }}
-    {{ render_field(form.preview, placeholder="Preview") }}
-    {{ render_field(form.image_url, placeholder="Image URL") }}
-    {{ render_field(form.content, placeholder="Content") }}
-    <button type="submit" class="btn btn-default btn-block">Publish</button>
+  {{ render_form_errors(form) }}
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <a href="#edit-tab" id="edit-select" data-toggle="tab">Edit</a>
+    </li>
+    <li role="presentation">
+      <a href="#preview-tab" id="preview-select" data-toggle="tab">Preview</a>
+    </li>
+  </ul>
+  <form data-toggle="validator" role="form" action="{{ url_for('post.update', post_id=post.id) }}" method="post">
+    {{ form.csrf_token }}
+    <div class="tab-content clearfix">
+      <div class="tab-pane active" id="edit-tab">
+        {{ render_field(form.title, required=True, maxlength=160) }}
+        {{ render_field(form.lead_paragraph, maxlength=500, placeholder="A brief introduction", rows=5) }}
+        {{ render_field(form.image_url, required=True, type="url") }}
+        {{ render_field(form.content, required=True, maxlength=10000, rows=15, 
+          top_help="Can be styled using <a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>markdown</a>.") }}
+      </div>
+      <div class="tab-pane" id="preview-tab" class="preview"></div>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-block">Publish</button>
+    </div>
+    <div class="form-group">
+      <a class="btn btn-default btn-block" href="{{ url_for('post.settings', post_id=post.id) }}">
+        Back to settings
+      </a>
+    </div>
   </form>
 {% endblock %}

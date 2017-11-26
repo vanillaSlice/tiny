@@ -3,7 +3,7 @@
 {% set body_classes="search" %}
 
 {% block content %}
-  <form class="search-form" action="{{ url_for('search.index') }}" method="get">
+  <form class="search-form search-form-lg" action="{{ url_for('search.index') }}" method="get">
     <input type="search" name="terms" class="form-control search-input" placeholder="Search Tiny" />
   </form>
   <div class="posts row"></div>
