@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -22,6 +23,7 @@
     <link rel="stylesheet" href="{{ ASSET_URL }}" />
   {% endassets %}
 </head>
+
 <body class="{{ body_classes }}">
   <!-- navigation -->
   <nav class="navbar navbar-default navbar-fixed-top">
@@ -43,11 +45,19 @@
               <img class="avatar" src="{{ session.avatar_url }}" alt="Avatar">
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="{{ url_for('post.create') }}">New Post</a></li>
+              <li>
+                <a href="{{ url_for('post.create') }}">New Post</a>
+              </li>
               <li role="separator" class="divider"></li>
-              <li><a href="{{ url_for('user.show', user_id=session.user_id) }}">Profile</a></li>
-              <li><a href="{{ url_for('user.settings') }}">Settings</a></li>
-              <li><a href="{{ url_for('user.sign_out') }}" class="sign-out">Sign out</a></li>
+              <li>
+                <a href="{{ url_for('user.show', user_id=session.user_id) }}">Profile</a>
+              </li>
+              <li>
+                <a href="{{ url_for('user.settings') }}">Settings</a>
+              </li>
+              <li>
+                <a href="{{ url_for('user.sign_out') }}" class="sign-out">Sign out</a>
+              </li>
             </ul>
           </div>
         {% else %}
@@ -93,4 +103,5 @@
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
   {% endassets %}
 </body>
+
 </html>

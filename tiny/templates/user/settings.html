@@ -23,5 +23,8 @@
         <p class="list-group-item-text">Delete account and all of your content.</p>
       </a>
     </div>
+    <a class="btn btn-default btn-block" href="{{ url_for('user.show', user_id=user.id) }}">
+      Back to profile
+    </a>
   </div>
 {% endblock %}

@@ -88,7 +88,7 @@ def show(user_id, selected_user):
 @user.route("/settings", methods=["GET"])
 @sign_in_required
 def settings(current_user):
-    return render_template("user/settings.html")
+    return render_template("user/settings.html", user=current_user)
 
 @user.route("/update-profile", methods=["GET", "POST"])
 @sign_in_required

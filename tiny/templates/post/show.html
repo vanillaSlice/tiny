@@ -41,6 +41,9 @@
   <img class="post-img" src="{{ post.image_url }}">
   {{ post.content | markdown_to_html | safe }}
   <div class="comment-section">
+    <div class="section-header">
+      <h2>Comments</h2>
+    </div>
     {% if session.user_id %}
       <form class="comment-form" action="{{ url_for('post.comment', post_id=post.id) }}" method="post">
         {{ form.csrf_token }}
