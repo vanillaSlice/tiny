@@ -25,18 +25,6 @@ from tiny.models import Comment, Post
 
 post = Blueprint("post", __name__, url_prefix="/post")
 
-"""
-Post filters.
-"""
-
-@post.app_template_filter("markdown_to_html")
-def markdown_to_html_filter(s):
-    return markdown_to_html(s)
-
-"""
-Post routes.
-"""
-
 @post.route("/create", methods=["GET", "POST"])
 @sign_in_required
 def create(current_user):

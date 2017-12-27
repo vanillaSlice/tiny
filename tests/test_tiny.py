@@ -1,6 +1,6 @@
 import json
-import string
 import random
+import string
 import unittest
 
 from passlib.hash import sha256_crypt

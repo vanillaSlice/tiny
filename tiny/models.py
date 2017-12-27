@@ -43,16 +43,6 @@ class User(Document):
     avatar_url = URLField(required=True, default=__default_avatar_img_path__)
     created = DateTimeField(required=True, default=datetime.now)
 
-    # for text search
-    meta = {
-        "indexes": [
-            {
-                "default_language": "english",
-                "fields": ["$display_name"]
-            }
-        ]
-    }
-
     def serialize(self):
         # we don't want to expose the user's email or password
         return __delete_none__({
@@ -77,8 +67,8 @@ class Post(Document):
         "indexes": [
             {
                 "default_language": "english",
-                "fields": ["$title", "$lead_paragraph", "$content", "$author"],
-                "weights": {"title": 10, "lead_paragraph": 5, "content": 2, "author": 1}
+                "fields": ["$title", "$lead_paragraph", "$content"],
+                "weights": {"title": 10, "lead_paragraph": 5, "content": 2}
             }
         ]
     }
