@@ -4,14 +4,14 @@
 
 {% block content %}
   <div class="row user-info">
-    <div class="col-xs-8">
+    <div class="col-xs-7">
       <h1 class="display-name">{{ user.display_name }}</h1>
       {% if user.bio %}
         <p class="bio">{{ user.bio }}</p>
       {% endif %}
       <p class="created">Member since {{ user.created | format_date }}</p>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-5">
       <img class="avatar" src="{{ user.avatar_url }}">
     </div>
   </div>
