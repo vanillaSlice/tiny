@@ -1,5 +1,5 @@
 # Tiny
-A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://enigmatic-spire-44057.herokuapp.com/). **If you set up an account, please use a dummy email address and password.**
+A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://slicetiny.herokuapp.com/). **If you set up an account, please use a dummy email address and password.**
 
 ## Getting Started
 Install [virtualenv](https://virtualenv.pypa.io/en/stable/#) to create an isolated environment by running:
