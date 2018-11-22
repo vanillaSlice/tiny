@@ -4,3 +4,4 @@ venv
 .DS_Store
 instance
 .webassets-cache
+.coverage

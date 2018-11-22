@@ -1,4 +1,10 @@
 # Tiny
+
+[![Latest Release](https://img.shields.io/github/release/vanillaSlice/tiny.svg)](https://github.com/vanillaSlice/tiny/releases/latest)
+[![Build Status](https://img.shields.io/travis/vanillaSlice/tiny/master.svg)](https://travis-ci.org/vanillaSlice/tiny)
+[![Coverage Status](https://img.shields.io/coveralls/github/vanillaSlice/tiny/master.svg)](https://coveralls.io/github/vanillaSlice/tiny?branch=master)
+[![License](https://img.shields.io/github/license/vanillaSlice/tiny.svg)](LICENSE)
+
 A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). A deployed version can be viewed [here](https://slicetiny.herokuapp.com/). **If you set up an account, please use a dummy email address and password.**
 
 ## Getting Started
