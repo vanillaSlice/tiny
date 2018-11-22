@@ -16,4 +16,4 @@ class Default(object):
     MONGODB_PASSWORD = ""
 
 class Test(Default):
-    MONGODB_DB = "tiny_test"
+    MONGODB_HOST = "mongomock://localhost"

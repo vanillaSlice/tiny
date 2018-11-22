@@ -2,6 +2,7 @@ import json
 import random
 import string
 import unittest
+from unittest import mock
 
 from passlib.hash import sha256_crypt
 
@@ -879,21 +880,22 @@ class SearchTest(TestCase):
         self.assertEqual(len(posts), 0)
         self.assertEqual(response.status_code, 200)
 
-    def test_search_success(self):
+    @mock.patch("tiny.blueprints.search.search_posts")
+    def test_search_success(self, mock_search_posts):
         term = "python"
 
         # create posts containing search term
+        mocked_posts = []
         for i in range(4):
             post = self.get_mock_post()
             post.content = term
             post.save()
+            mocked_posts.append(post)
 
-        # create other posts
-        for i in range(6):
-            self.get_mock_post().save()
+        mock_search_posts.return_value = mocked_posts
 
         response = self.client.get("/search?terms={}".format(term),
-                                   headers={"accept": "application/json"})
+                                headers={"accept": "application/json"})
 
         # ensure only posts containing specified term are returned
         posts = json.loads(response.get_data(as_text=True))
