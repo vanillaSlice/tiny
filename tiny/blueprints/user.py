@@ -29,6 +29,10 @@ User routes.
 @user.route("/sign-up", methods=["GET", "POST"])
 @sign_out_required
 def sign_up():
+    """
+    User sign up route.
+    """
+
     # parse the form
     form = SignUpForm(request.form)
 
@@ -54,6 +58,10 @@ def sign_up():
 @user.route("/sign-in", methods=["GET", "POST"])
 @sign_out_required
 def sign_in():
+    """
+    User sign in route.
+    """
+
     # parse the form
     form = SignInForm(request.form)
 
@@ -73,6 +81,10 @@ def sign_in():
 
 @user.route("/sign-out", methods=["GET", "POST"])
 def sign_out():
+    """
+    User sign out route.
+    """
+
     # clear session data only if POST request
     if request.method == "POST":
         session.clear()
@@ -83,16 +95,28 @@ def sign_out():
 @user.route("/<user_id>/show", methods=["GET"])
 @user_required
 def show(user_id, selected_user):
+    """
+    User show route.
+    """
+
     return render_template("user/show.html", user=selected_user)
 
 @user.route("/settings", methods=["GET"])
 @sign_in_required
 def settings(current_user):
+    """
+    User settings route.
+    """
+
     return render_template("user/settings.html", user=current_user)
 
 @user.route("/update-profile", methods=["GET", "POST"])
 @sign_in_required
 def update_profile(current_user):
+    """
+    Update profile route.
+    """
+
     # parse the form
     form = UpdateProfileForm(request.form, obj=current_user)
 
@@ -116,6 +140,10 @@ def update_profile(current_user):
 @user.route("/update-password", methods=["GET", "POST"])
 @sign_in_required
 def update_password(current_user):
+    """
+    Update password route.
+    """
+
     # parse the form
     form = UpdatePasswordForm(request.form, user=current_user)
 
@@ -136,6 +164,10 @@ def update_password(current_user):
 @user.route("/delete", methods=["GET", "POST"])
 @sign_in_required
 def delete(current_user):
+    """
+    Delete user route.
+    """
+
     # render delete page if GET request
     if request.method == "GET":
         return render_template("user/delete.html")
@@ -154,6 +186,10 @@ def delete(current_user):
 @user.route("/<user_id>/posts", methods=["GET"])
 @user_required
 def posts(user_id, selected_user):
+    """
+    User posts route.
+    """
+
     # get query parameters
     skip = request.args.get("skip", 0, type=int)
     limit = request.args.get("limit", 12, type=int)

@@ -10,6 +10,10 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, URL
 from .helpers import get_user
 
 class SignUpForm(FlaskForm):
+    """
+    Sign up form.
+    """
+
     email = StringField("Email", validators=[
         DataRequired(),
         Email()
@@ -42,6 +46,10 @@ class SignUpForm(FlaskForm):
         return True
 
 class SignInForm(FlaskForm):
+    """
+    Sign in form.
+    """
+
     email = StringField("Email", validators=[
         DataRequired(),
         Email()
@@ -71,6 +79,10 @@ class SignInForm(FlaskForm):
         return True
 
 class UpdateProfileForm(FlaskForm):
+    """
+    Update profile form.
+    """
+
     display_name = StringField("Display Name", validators=[
         DataRequired(),
         Length(min=1, max=50)
@@ -86,6 +98,10 @@ class UpdateProfileForm(FlaskForm):
     ])
 
 class UpdatePasswordForm(FlaskForm):
+    """
+    Update password form.
+    """
+
     current_password = PasswordField("Current Password", validators=[
         DataRequired()
     ])
@@ -116,6 +132,10 @@ class UpdatePasswordForm(FlaskForm):
         return True
 
 class PostForm(FlaskForm):
+    """
+    Post form.
+    """
+
     title = StringField("Title", validators=[
         DataRequired(),
         Length(min=1, max=160)
@@ -136,6 +156,10 @@ class PostForm(FlaskForm):
     ])
 
 class CommentForm(FlaskForm):
+    """
+    Comment form.
+    """
+
     text = TextAreaField("Text", validators=[
         DataRequired("Comment text is required"),
         Length(min=1, max=500, message="Comment must be between 1 and 500 characters long.")

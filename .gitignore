@@ -1,7 +1,21 @@
-__pycache__
-.vscode
-venv
+# macOS
 .DS_Store
-instance
-.webassets-cache
+
+# VSCode
+.vscode
+
+# Build Artifacts
+build
+
+# Python
+__pycache__
+
+# Coverage
 .coverage
+
+# Flask-Assets cache
+.webassets-cache
+
+# Local config
+instance/*
+!instance/config-example.py

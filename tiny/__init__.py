@@ -1,5 +1,5 @@
 """
-Exports a function to create an instance of Tiny app.
+Exports a function to create an instance of the Tiny app.
 """
 
 import os
@@ -12,6 +12,10 @@ from .assets import bundles
 from .helpers import markdown_to_html
 
 def create_app(testing=False):
+    """
+    Creates an instance of the Tiny app.
+    """
+
     app = Flask(__name__, instance_relative_config=True)
 
     if testing:

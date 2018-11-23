@@ -10,6 +10,10 @@ search = Blueprint("search", __name__, url_prefix="/search")
 
 @search.route("", methods=["GET"])
 def index():
+    """
+    Search route.
+    """
+
     # not json so just render search page
     if not request_wants_json():
         return render_template("search/index.html")

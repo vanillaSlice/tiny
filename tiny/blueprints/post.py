@@ -28,6 +28,10 @@ post = Blueprint("post", __name__, url_prefix="/post")
 @post.route("/create", methods=["GET", "POST"])
 @sign_in_required
 def create(current_user):
+    """
+    Create post route.
+    """
+
     # parse the form
     form = PostForm(request.form, obj=Post())
 
@@ -51,6 +55,10 @@ def create(current_user):
 @post.route("/<post_id>/show", methods=["GET"])
 @post_required
 def show(post_id, selected_post):
+    """
+    Show post route.
+    """
+
     return render_template("post/show.html",
                            form=CommentForm(),
                            post=selected_post,
@@ -61,6 +69,10 @@ def show(post_id, selected_post):
 @post_required
 @author_required
 def settings(current_user, post_id, selected_post):
+    """
+    Post settings route.
+    """
+
     return render_template("post/settings.html", post=selected_post)
 
 @post.route("/<post_id>/update", methods=["GET", "POST"])
@@ -68,6 +80,10 @@ def settings(current_user, post_id, selected_post):
 @post_required
 @author_required
 def update(current_user, post_id, selected_post):
+    """
+    Update post route.
+    """
+
     # parse the form
     form = PostForm(request.form, obj=selected_post)
 
@@ -91,6 +107,10 @@ def update(current_user, post_id, selected_post):
 @post_required
 @author_required
 def delete(current_user, post_id, selected_post):
+    """
+    Delete post route.
+    """
+
     # render delete page if GET request
     if request.method == "GET":
         return render_template("post/delete.html", post=selected_post)
@@ -105,6 +125,10 @@ def delete(current_user, post_id, selected_post):
 
 @post.route("/latest", methods=["GET"])
 def latest():
+    """
+    Latest post route.
+    """
+
     # get query parameters
     skip = request.args.get("skip", 0, type=int)
     limit = request.args.get("limit", 12, type=int)
@@ -120,6 +144,10 @@ def latest():
 @post.route("/<post_id>/comments", methods=["GET"])
 @post_required
 def comments(post_id, selected_post):
+    """
+    Post comments route.
+    """
+
     # get query parameters
     skip = request.args.get("skip", 0, type=int)
     limit = request.args.get("limit", 12, type=int)
@@ -137,6 +165,10 @@ def comments(post_id, selected_post):
 @sign_in_required
 @post_required
 def comment(current_user, post_id, selected_post):
+    """
+    Post comment route.
+    """
+
     # parse the form
     form = CommentForm(request.form)
 
@@ -157,4 +189,8 @@ def comment(current_user, post_id, selected_post):
 
 @post.route("/preview", methods=["POST"])
 def preview():
+    """
+    Post preview route.
+    """
+
     return jsonify({"html": markdown_to_html(request.form.get("content", ""))}), 200

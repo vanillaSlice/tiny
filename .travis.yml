@@ -9,6 +9,7 @@ install:
   - pip install -r requirements.txt
   - pip install -r requirements-test.txt
 script:
+  - ./scripts/lint.sh
   - ./scripts/test.sh
 after_success:
   - coveralls

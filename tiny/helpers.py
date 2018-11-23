@@ -90,20 +90,36 @@ def author_required(func):
     return decorated_function
 
 def to_ObjectId(value):
+    """
+    Safely converts value to ObjectId.
+    """
+
     try:
         return ObjectId(value)
     except InvalidId:
         return ObjectId(None)
 
 def get_user(user_id=None, email=None, exclude=[]):
+    """
+    Queries the database for a user.
+    """
+
     return User.objects(Q(id=to_ObjectId(user_id)) | Q(email=email)) \
                .exclude(*exclude) \
                .first()
 
 def get_current_user():
+    """
+    Returns the current user.
+    """
+
     return get_user(session.get("user_id"))
 
 def get_posts(user_id=None, exclude=[], order_by=[], skip=0, limit=12):
+    """
+    Queries the database for posts.
+    """
+
     # cap number of posts to return
     limit = 100 if limit > 100 else limit
 
@@ -120,6 +136,10 @@ def get_posts(user_id=None, exclude=[], order_by=[], skip=0, limit=12):
                     .limit(limit)
 
 def search_posts(search_text=None, exclude=[], order_by=[], skip=0, limit=12):
+    """
+    Performs a text search on posts.
+    """
+
     # cap number of posts to return
     limit = 100 if limit > 100 else limit
 
@@ -134,11 +154,19 @@ def search_posts(search_text=None, exclude=[], order_by=[], skip=0, limit=12):
                     .limit(limit)
 
 def get_post(post_id=None, exclude=[]):
+    """
+    Returns a post.
+    """
+
     return Post.objects(id=to_ObjectId(post_id)) \
                .exclude(*exclude) \
                .first()
 
 def get_comments(user_id=None, post_id=None, exclude=[], order_by=[], skip=0, limit=12):
+    """
+    Returns comments on a post.
+    """
+
     # cap number of comments to return
     limit = 100 if limit > 100 else limit
 
@@ -149,20 +177,36 @@ def get_comments(user_id=None, post_id=None, exclude=[], order_by=[], skip=0, li
                   .limit(limit)
 
 def get_comment(comment_id=None, exclude=[]):
+    """
+    Returns a comment.
+    """
+
     return Comment.objects(id=to_ObjectId(comment_id)) \
                   .exclude(*exclude) \
                   .first()
 
 def serialize(results):
+    """
+    Serializes a group of results.
+    """
+
     serialized = []
     for result in results:
         serialized.append(result.serialize())
     return serialized
 
 def request_wants_json():
+    """
+    Returns if a request wants JSON.
+    """
+
     best = request.accept_mimetypes.best_match(["application/json", "text/html"])
     return best == "application/json" and \
            request.accept_mimetypes[best] > request.accept_mimetypes["text/html"]
 
 def markdown_to_html(value):
+    """
+    Converts markdown to HTML.
+    """
+
     return markdown(value)

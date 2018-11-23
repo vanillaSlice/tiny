@@ -1,0 +1,12 @@
+[MASTER]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=dangerous-default-value,
+        duplicate-code,
+        invalid-name,
+        no-else-return,
+        no-member,
+        too-many-arguments,
+        unused-argument,
+        unused-variable
