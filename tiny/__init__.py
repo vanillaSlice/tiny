@@ -8,8 +8,8 @@ from flask import Flask, render_template
 from flask_assets import Environment
 from flask_mongoengine import MongoEngine
 
-from .assets import bundles
-from .helpers import markdown_to_html
+from tiny.assets import bundles
+from tiny.helpers import markdown_to_html
 
 def create_app(testing=False):
     """
@@ -18,27 +18,34 @@ def create_app(testing=False):
 
     app = Flask(__name__, instance_relative_config=True)
 
+    # load default config
+    app.config.from_object('config.Default')
+
+    # load instance config (if present)
+    app.config.from_pyfile('config.py', silent=True)
+
+    # load test config (if testing)
     if testing:
-        # load test config
-        app.config.from_object("config.Test")
-    else:
-        # load default config
-        app.config.from_object("config.Default")
+        app.config.from_object('config.Test')
 
-        # load instance config (if present)
-        app.config.from_pyfile("config.py", silent=True)
+    app.config.update({'TESTING': testing})
 
-        # load environment variables (if present)
-        app.config.update({
-            "DEBUG": os.environ.get("DEBUG", str(app.config.get("DEBUG"))).lower() == "true",
-            "SECRET_KEY": os.environ.get("SECRET_KEY", app.config.get("SECRET_KEY")),
-            "SERVER_NAME": os.environ.get("SERVER_NAME", app.config.get("SERVER_NAME")),
-            "MONGODB_DB": os.environ.get("MONGODB_DB", app.config.get("MONGODB_DB")),
-            "MONGODB_HOST": os.environ.get("MONGODB_HOST", app.config.get("MONGODB_HOST")),
-            "MONGODB_PORT": os.environ.get("MONGODB_PORT", app.config.get("MONGODB_PORT")),
-            "MONGODB_USERNAME": os.environ.get("MONGODB_USERNAME", app.config.get("MONGODB_USERNAME")),
-            "MONGODB_PASSWORD": os.environ.get("MONGODB_PASSWORD", app.config.get("MONGODB_PASSWORD"))
-        })
+    # load environment variables (if present)
+    app.config.update({
+        'DEBUG': os.environ.get('DEBUG', str(app.config.get('DEBUG'))).lower() == 'true',
+        'ENV': os.environ.get('ENV', app.config.get('ENV')),
+        'MONGODB_DB': os.environ.get('MONGODB_DB', app.config.get('MONGODB_DB')),
+        'MONGODB_HOST': os.environ.get('MONGODB_HOST', app.config.get('MONGODB_HOST')),
+        'MONGODB_PASSWORD': os.environ.get('MONGODB_PASSWORD', app.config.get('MONGODB_PASSWORD')),
+        'MONGODB_PORT': os.environ.get('MONGODB_PORT', app.config.get('MONGODB_PORT')),
+        'MONGODB_USERNAME': os.environ.get('MONGODB_USERNAME', app.config.get('MONGODB_USERNAME')),
+        'SECRET_KEY': os.environ.get('SECRET_KEY', app.config.get('SECRET_KEY')),
+        'SERVER_NAME': os.environ.get('SERVER_NAME', app.config.get('SERVER_NAME')),
+        'SESSION_COOKIE_DOMAIN':
+            os.environ.get('SESSION_COOKIE_DOMAIN', app.config.get('SESSION_COOKIE_DOMAIN')),
+        'WTF_CSRF_ENABLED':
+            os.environ.get('WTF_CSRF_ENABLED', str(app.config.get('WTF_CSRF_ENABLED'))).lower() == 'true'
+    })
 
     # connect to database
     MongoEngine(app)

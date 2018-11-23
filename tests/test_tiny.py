@@ -14,7 +14,6 @@ class TestCase(unittest.TestCase):
         # set up test app instance
         self.app = create_app(testing=True)
         self.app.app_context().push()
-        self.app.config["WTF_CSRF_ENABLED"] = False
         self.client = self.app.test_client()
 
         # make sure we start with a clean database
