@@ -36,9 +36,13 @@ def sign_up():
     # parse the form
     form = SignUpForm(request.form)
 
-    # render sign up form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render sign up form if GET request
+    if request.method == "GET":
         return render_template("user/sign_up.html", form=form)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("user/sign_up.html", form=form), 400
 
     # save new user
     new_user = User(email=form.email.data,
@@ -65,9 +69,13 @@ def sign_in():
     # parse the form
     form = SignInForm(request.form)
 
-    # render sign in form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render sign in form if GET request
+    if request.method == "GET":
         return render_template("user/sign_in.html", form=form)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("user/sign_in.html", form=form), 400
 
     # make sure we store user id and avatar url in session
     session["user_id"] = str(form.user.id)
@@ -120,9 +128,13 @@ def update_profile(current_user):
     # parse the form
     form = UpdateProfileForm(request.form, obj=current_user)
 
-    # render update profile form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render update profile form if GET request
+    if request.method == "GET":
         return render_template("user/update_profile.html", form=form)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("user/update_profile.html", form=form), 400
 
     # update the user information
     form.populate_obj(current_user)
@@ -147,9 +159,13 @@ def update_password(current_user):
     # parse the form
     form = UpdatePasswordForm(request.form, user=current_user)
 
-    # render update password form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render update password form if GET request
+    if request.method == "GET":
         return render_template("user/update_password.html", form=form)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("user/update_password.html", form=form), 400
 
     # update password
     current_user.password = sha256_crypt.hash(form.new_password.data)

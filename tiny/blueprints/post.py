@@ -35,9 +35,13 @@ def create(current_user):
     # parse the form
     form = PostForm(request.form, obj=Post())
 
-    # render create post form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render create post form if GET request
+    if request.method == "GET":
         return render_template("post/create.html", form=form)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("post/create.html", form=form), 400
 
     # create new post
     new_post = Post(author=current_user,
@@ -87,9 +91,13 @@ def update(current_user, post_id, selected_post):
     # parse the form
     form = PostForm(request.form, obj=selected_post)
 
-    # render update post form if GET request or submitted form is invalid
-    if request.method == "GET" or not form.validate_on_submit():
+    # render update post form if GET request
+    if request.method == "GET":
         return render_template("post/update.html", form=form, post=selected_post)
+
+    # render form again if submitted form is invalid
+    if not form.validate_on_submit():
+        return render_template("post/update.html", form=form, post=selected_post), 400
 
     # update the post information
     form.populate_obj(selected_post)
