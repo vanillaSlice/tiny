@@ -9,6 +9,10 @@ A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https
 A deployed version can be viewed [here](https://slicetiny.herokuapp.com/).
 **If you set up an account, please use a dummy email address and password.**
 
+## Screenshot
+
+![Screenshot](/images/screenshot-1.png)
+
 ## Getting Started
 
 ### Installing Requirements
