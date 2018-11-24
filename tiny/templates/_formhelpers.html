@@ -1,14 +1,14 @@
 {% macro render_field(field, show_label=True, top_help=None, bottom_help=None) %}
   <div class="form-group {{'has-error' if field.errors }}">
     {% if show_label %}
-      {{ field.label(class_="control-label") }}
+      {{ field.label(class_='control-label') }}
     {% endif %}
     {% if top_help %}
       <div class="help-block">
         {{ top_help | safe }}
       </div>
     {% endif %}
-    {{ field(class_="form-control", **kwargs) | safe }}
+    {{ field(class_='form-control', **kwargs) | safe }}
     <div class="help-block with-errors">
       {% if bottom_help %}
         {{ bottom_help }}

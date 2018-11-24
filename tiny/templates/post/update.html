@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
-{% from "_formhelpers.html" import render_field, render_form_errors %}
+{% from '_formhelpers.html' import render_field, render_form_errors %}
 
-{% set body_classes="post update" %}
+{% set body_classes='post update' %}
 
 {% block content %}
   <div class="form-header plain text-center">
@@ -22,10 +22,10 @@
     <div class="tab-content clearfix">
       <div class="tab-pane active" id="edit-tab">
         {{ render_field(form.title, required=True, maxlength=160) }}
-        {{ render_field(form.lead_paragraph, maxlength=500, placeholder="A brief introduction", rows=5) }}
-        {{ render_field(form.image_url, required=True, type="url") }}
+        {{ render_field(form.lead_paragraph, maxlength=500, placeholder='A brief introduction', rows=5) }}
+        {{ render_field(form.image_url, required=True, type='url') }}
         {{ render_field(form.content, required=True, maxlength=10000, rows=15, 
-          top_help="Can be styled using <a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>markdown</a>.") }}
+          top_help='Can be styled using <a href=\'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet\'>markdown</a>.') }}
       </div>
       <div class="tab-pane" id="preview-tab" class="preview"></div>
     </div>

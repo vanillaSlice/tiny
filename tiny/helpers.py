@@ -10,7 +10,7 @@ from flask import flash, redirect, request, session, url_for
 from mistune import Markdown
 from mongoengine.queryset.visitor import Q
 
-from .models import Comment, Post, User
+from tiny.models import Comment, Post, User
 
 markdown = Markdown(hard_wrap=True)
 
@@ -24,8 +24,8 @@ def sign_in_required(func):
         current_user = get_current_user()
         if not current_user:
             session.clear()
-            return redirect(url_for("user.sign_in", next=request.url))
-        kwargs["current_user"] = current_user
+            return redirect(url_for('user.sign_in', next=request.url))
+        kwargs['current_user'] = current_user
         return func(*args, **kwargs)
     return decorated_function
 
@@ -37,7 +37,7 @@ def sign_out_required(func):
     def decorated_function(*args, **kwargs):
         current_user = get_current_user()
         if current_user:
-            return redirect(url_for("home.index"))
+            return redirect(url_for('home.index'))
         return func(*args, **kwargs)
     return decorated_function
 
@@ -49,11 +49,11 @@ def user_required(func):
     """
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        selected_user = get_user(user_id=kwargs["user_id"], exclude=["email", "password"])
+        selected_user = get_user(user_id=kwargs['user_id'], exclude=['email', 'password'])
         if not selected_user:
-            flash("Oops - we couldn't find that user", "danger")
-            return redirect(url_for("home.index"))
-        kwargs["selected_user"] = selected_user
+            flash('Oops - we couldn\'t find that user', 'danger')
+            return redirect(url_for('home.index'))
+        kwargs['selected_user'] = selected_user
         return func(*args, **kwargs)
     return decorated_function
 
@@ -64,11 +64,11 @@ def post_required(func):
     """
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        selected_post = get_post(post_id=kwargs["post_id"])
+        selected_post = get_post(post_id=kwargs['post_id'])
         if not selected_post:
-            flash("Oops - we couldn't find that post", "danger")
-            return redirect(url_for("home.index"))
-        kwargs["selected_post"] = selected_post
+            flash('Oops - we couldn\'t find that post', 'danger')
+            return redirect(url_for('home.index'))
+        kwargs['selected_post'] = selected_post
         return func(*args, **kwargs)
     return decorated_function
 
@@ -81,11 +81,11 @@ def author_required(func):
     """
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        selected_post = kwargs["selected_post"]
-        current_user = kwargs["current_user"]
+        selected_post = kwargs['selected_post']
+        current_user = kwargs['current_user']
         if selected_post.author.id != current_user.id:
-            flash("Oops - you are not the author of this post", "danger")
-            return redirect(url_for("post.show", post_id=kwargs["post_id"]))
+            flash('Oops - you are not the author of this post', 'danger')
+            return redirect(url_for('post.show', post_id=kwargs['post_id']))
         return func(*args, **kwargs)
     return decorated_function
 
@@ -113,7 +113,7 @@ def get_current_user():
     Returns the current user.
     """
 
-    return get_user(session.get("user_id"))
+    return get_user(session.get('user_id'))
 
 def get_posts(user_id=None, exclude=[], order_by=[], skip=0, limit=12):
     """
@@ -200,9 +200,9 @@ def request_wants_json():
     Returns if a request wants JSON.
     """
 
-    best = request.accept_mimetypes.best_match(["application/json", "text/html"])
-    return best == "application/json" and \
-           request.accept_mimetypes[best] > request.accept_mimetypes["text/html"]
+    best = request.accept_mimetypes.best_match(['application/json', 'text/html'])
+    return best == 'application/json' and \
+           request.accept_mimetypes[best] > request.accept_mimetypes['text/html']
 
 def markdown_to_html(value):
     """

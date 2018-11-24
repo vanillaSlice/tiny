@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
-{% set body_classes="search" %}
+{% set body_classes='search' %}
 
 {% block content %}
   <form class="search-form search-form-lg" action="{{ url_for('search.index') }}" method="get">

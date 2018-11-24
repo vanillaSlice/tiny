@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
-{% from "_formhelpers.html" import render_field, render_form_errors %}
+{% from '_formhelpers.html' import render_field, render_form_errors %}
 
-{% set body_classes="user update-profile" %}
+{% set body_classes='user update-profile' %}
 
 {% block content %}
   <div class="form-header plain text-center">
@@ -12,8 +12,8 @@
   <form data-toggle="validator" role="form" action="{{ url_for('user.update_profile') }}" method="post">
     {{ form.csrf_token }}
     {{ render_field(form.display_name, required=True, maxlength=50) }}
-    {{ render_field(form.avatar_url, required=True, type="url") }}
-    {{ render_field(form.bio, placeholder="Tell us a bit about yourself", maxlength=160, rows=3)}}
+    {{ render_field(form.avatar_url, required=True, type='url') }}
+    {{ render_field(form.bio, placeholder='Tell us a bit about yourself', maxlength=160, rows=3)}}
     <div class="form-group">
       <button type="submit" class="btn btn-primary btn-block">Update</button>
     </div>

@@ -26,10 +26,10 @@ def __delete_none__(d):
     return d
 
 def __default_avatar_img_path__():
-    return url_for("static", filename="img/default-avatar.jpg", _external=True)
+    return url_for('static', filename='img/default-avatar.jpg', _external=True)
 
 def __default_post_img_path__():
-    return url_for("static", filename="img/default-post.jpg", _external=True)
+    return url_for('static', filename='img/default-post.jpg', _external=True)
 
 #
 # Model definitions.
@@ -37,7 +37,7 @@ def __default_post_img_path__():
 
 class User(Document):
     """
-    Represents ssers.
+    Represents users.
     """
 
     email = EmailField(unique=True, required=True)
@@ -54,11 +54,11 @@ class User(Document):
 
         # we don't want to expose the user's email or password
         return __delete_none__({
-            "id": str(self.id),
-            "display_name": self.display_name,
-            "bio": self.bio,
-            "avatar_url": self.avatar_url,
-            "created": self.created
+            'id': str(self.id),
+            'display_name': self.display_name,
+            'bio': self.bio,
+            'avatar_url': self.avatar_url,
+            'created': self.created
         })
 
 class Post(Document):
@@ -76,11 +76,11 @@ class Post(Document):
 
     # for text search
     meta = {
-        "indexes": [
+        'indexes': [
             {
-                "default_language": "english",
-                "fields": ["$title", "$lead_paragraph", "$content"],
-                "weights": {"title": 10, "lead_paragraph": 5, "content": 2}
+                'default_language': 'english',
+                'fields': ['$title', '$lead_paragraph', '$content'],
+                'weights': {'title': 10, 'lead_paragraph': 5, 'content': 2}
             }
         ]
     }
@@ -91,14 +91,14 @@ class Post(Document):
         """
 
         return __delete_none__({
-            "id": str(self.id),
-            "author": self.author.serialize() if self.author else None,
-            "title": self.title,
-            "lead_paragraph": self.lead_paragraph,
-            "image_url": self.image_url,
-            "content": self.content,
-            "created": self.created,
-            "last_updated": self.last_updated
+            'id': str(self.id),
+            'author': self.author.serialize() if self.author else None,
+            'title': self.title,
+            'lead_paragraph': self.lead_paragraph,
+            'image_url': self.image_url,
+            'content': self.content,
+            'created': self.created,
+            'last_updated': self.last_updated
         })
 
 class Comment(Document):
@@ -117,9 +117,9 @@ class Comment(Document):
         """
 
         return __delete_none__({
-            "id": str(self.id),
-            "author": self.author.serialize() if self.author else None,
-            "post": self.post.serialize() if self.post else None,
-            "text": self.text,
-            "created": self.created
+            'id': str(self.id),
+            'author': self.author.serialize() if self.author else None,
+            'post': self.post.serialize() if self.post else None,
+            'text': self.text,
+            'created': self.created
         })

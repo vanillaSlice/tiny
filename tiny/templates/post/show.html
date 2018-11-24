@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
-{% from "_formhelpers.html" import render_field %}
+{% from '_formhelpers.html' import render_field %}
 
-{% set body_classes="post show" %}
+{% set body_classes='post show' %}
 
 {% block content %}
   <div class="post-info">
@@ -47,7 +47,7 @@
     {% if session.user_id %}
       <form class="comment-form" action="{{ url_for('post.comment', post_id=post.id) }}" method="post">
         {{ form.csrf_token }}
-        {{ render_field(form.text, show_label=False, maxlength=500, rows=4, placeholder="Leave a comment ...") }}
+        {{ render_field(form.text, show_label=False, maxlength=500, rows=4, placeholder='Leave a comment ...') }}
         <div class="form-group">
           <button class="btn btn-primary btn-block">Send</button>
         </div>

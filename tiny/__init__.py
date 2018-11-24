@@ -11,6 +11,10 @@ from flask_mongoengine import MongoEngine
 from tiny.assets import bundles
 from tiny.helpers import markdown_to_html
 
+assets = Environment()
+
+mongoengine = MongoEngine()
+
 def create_app(testing=False):
     """
     Creates an instance of the Tiny app.
@@ -47,48 +51,47 @@ def create_app(testing=False):
             os.environ.get('WTF_CSRF_ENABLED', str(app.config.get('WTF_CSRF_ENABLED'))).lower() == 'true'
     })
 
-    # connect to database
-    MongoEngine(app)
+    # init extensions
+    assets.init_app(app)
+    mongoengine.init_app(app)
 
-    # disable strict trailing slashes i.e. so /user/sign-in and /user/sign-in/ both
-    # resolve to same endpoint
+    # disable strict trailing slashes e.g. so /user/sign-in and /user/sign-in/ both resolve to same endpoint
     app.url_map.strict_slashes = False
 
     # register blueprints
-    from .blueprints.home import home
-    from .blueprints.user import user
-    from .blueprints.post import post
-    from .blueprints.search import search
+    from tiny.blueprints.home import home
+    from tiny.blueprints.post import post
+    from tiny.blueprints.search import search
+    from tiny.blueprints.user import user
     app.register_blueprint(home)
-    app.register_blueprint(user)
     app.register_blueprint(post)
     app.register_blueprint(search)
+    app.register_blueprint(user)
 
     # register asset bundles
-    assets = Environment(app)
     assets.register(bundles)
 
     # register filters
-    @app.template_filter("format_date")
+    @app.template_filter('format_date')
     def format_date_filter(s):
-        return s.strftime("%b %d %Y")
+        return s.strftime('%b %d %Y')
 
-    @app.template_filter("markdown_to_html")
+    @app.template_filter('markdown_to_html')
     def markdown_to_html_filter(s):
         return markdown_to_html(s)
 
     # attach 404 error handler
     @app.errorhandler(404)
     def handle_404(error):
-        return render_template("404.html", error=error), 404
+        return render_template('404.html', error=error), 404
 
     # disable caching when debugging
     if app.debug:
         @app.after_request
         def after_request(response):
-            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-            response.headers["Expires"] = 0
-            response.headers["Pragma"] = "no-cache"
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Expires'] = 0
+            response.headers['Pragma'] = 'no-cache'
             return response
 
     return app
