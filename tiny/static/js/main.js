@@ -257,7 +257,7 @@ $(document).ready(function() {
       commentForm.submit(function(e) {
         e.preventDefault();
 
-        var url = commentForm.attr("action");
+        var url = commentForm.attr('action');
 
         $.post(url, commentForm.serialize(), function(response) {
           commentForm[0].reset();
