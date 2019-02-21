@@ -24,7 +24,7 @@ class TestUser(TestBase):
         assert sha256_crypt.verify(data['password'], user.password)
         assert user.display_name == data['display_name']
         assert user.bio is None
-        assert '/static/img/default-avatar.jpg' in user.avatar_url
+        assert '/static/images/default-avatar.jpg' in user.avatar_url
         assert user.created is not None
         assert response.status_code == 302
 

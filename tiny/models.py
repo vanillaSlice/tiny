@@ -25,11 +25,11 @@ def __delete_none__(d):
             __delete_none__(value)
     return d
 
-def __default_avatar_img_path__():
-    return url_for('static', filename='img/default-avatar.jpg', _external=True)
+def __default_avatar_image_path__():
+    return url_for('static', filename='images/default-avatar.jpg', _external=True)
 
-def __default_post_img_path__():
-    return url_for('static', filename='img/default-post.jpg', _external=True)
+def __default_post_image_path__():
+    return url_for('static', filename='images/default-post.jpg', _external=True)
 
 #
 # Model definitions.
@@ -44,7 +44,7 @@ class User(Document):
     password = StringField(required=True)
     display_name = StringField(required=True, min_length=1, max_length=50)
     bio = StringField(max_length=160)
-    avatar_url = URLField(required=True, default=__default_avatar_img_path__)
+    avatar_url = URLField(required=True, default=__default_avatar_image_path__)
     created = DateTimeField(required=True, default=datetime.now)
 
     def serialize(self):
@@ -69,7 +69,7 @@ class Post(Document):
     author = ReferenceField(User, required=True, reverse_delete_rule=CASCADE)
     title = StringField(required=True, min_length=1, max_length=160)
     lead_paragraph = StringField(max_length=500)
-    image_url = StringField(required=True, default=__default_post_img_path__)
+    image_url = StringField(required=True, default=__default_post_image_path__)
     content = StringField(required=True, min_length=1, max_length=10_000)
     created = DateTimeField(required=True, default=datetime.now)
     last_updated = DateTimeField()
