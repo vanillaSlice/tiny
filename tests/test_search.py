@@ -29,6 +29,10 @@ class TestSearch(TestBase):
 
         mock_search_posts.return_value = mocked_posts
 
+        # create other posts
+        for i in range(6):
+            get_mock_post().save()
+
         response = self.client.get('/search?terms={}'.format(term),
                                    headers={'accept': 'application/json'})
         assert response.status_code == 200

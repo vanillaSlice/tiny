@@ -363,6 +363,19 @@ class TestPost(TestBase):
     # Create comment tests.
     #
 
+    def assert_create_comment_successful(self, post, data):
+        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
+        comment = Comment.objects(post=post.id).first()
+        assert comment.author == self.user
+        assert comment.post == post
+        assert comment.text == data['text']
+        assert comment.created is not None
+        assert response.status_code == 200
+
+    def assert_create_comment_unsuccessful(self, post, data):
+        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
+        assert response.status_code == 400
+
     def get_mock_comment_data(self):
         return {'text': random_string(10)}
 
@@ -386,48 +399,28 @@ class TestPost(TestBase):
         post = get_mock_post().save()
         data = self.get_mock_comment_data()
         data['text'] = ''
-        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
-        assert response.status_code == 400
+        self.assert_create_comment_unsuccessful(post, data)
 
     def test_create_comment_text_too_long(self):
         post = get_mock_post().save()
         data = self.get_mock_comment_data()
         data['text'] = random_string(501)
-        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
-        assert response.status_code == 400
+        self.assert_create_comment_unsuccessful(post, data)
 
     def test_create_comment_text_length_equal_to_minimum(self):
         post = get_mock_post().save()
         data = {'text': random_string(1)}
-        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
-        comment = Comment.objects(post=post.id).first()
-        assert comment.author == self.user
-        assert comment.post == post
-        assert comment.text == data['text']
-        assert comment.created is not None
-        assert response.status_code == 200
+        self.assert_create_comment_successful(post, data)
 
     def test_create_comment_text_length_equal_to_maximum(self):
         post = get_mock_post().save()
         data = {'text': random_string(500)}
-        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
-        comment = Comment.objects(post=post.id).first()
-        assert comment.author == self.user
-        assert comment.post == post
-        assert comment.text == data['text']
-        assert comment.created is not None
-        assert response.status_code == 200
+        self.assert_create_comment_successful(post, data)
 
     def test_create_comment_success(self):
         post = get_mock_post().save()
         data = {'text': random_string(7)}
-        response = self.client.post('/post/{}/comment'.format(str(post.id)), data=data)
-        comment = Comment.objects(post=post.id).first()
-        assert comment.author == self.user
-        assert comment.post == post
-        assert comment.text == data['text']
-        assert comment.created is not None
-        assert response.status_code == 200
+        self.assert_create_comment_successful(post, data)
 
     #
     # Preview tests.
