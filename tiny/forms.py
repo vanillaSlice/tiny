@@ -27,12 +27,12 @@ class SignUpForm(FlaskForm):
     password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=6),
-        EqualTo('confirmation', message='Password and Confirmation must match')
+        EqualTo('confirmation', message='Password and Confirmation must match.')
     ])
 
     confirmation = PasswordField('Confirmation', validators=[
         DataRequired(),
-        EqualTo('password', message='Password and Confirmation must match')
+        EqualTo('password', message='Password and Confirmation must match.')
     ])
 
     def validate_on_submit(self):
@@ -109,12 +109,12 @@ class UpdatePasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6),
-        EqualTo('confirmation', message='New Password and Confirmation must match')
+        EqualTo('confirmation', message='New Password and Confirmation must match.')
     ])
 
     confirmation = PasswordField('Confirmation', validators=[
         DataRequired(),
-        EqualTo('new_password', message='New Password and Confirmation must match')
+        EqualTo('new_password', message='New Password and Confirmation must match.')
     ])
 
     def __init__(self, *args, **kwargs):
@@ -161,6 +161,6 @@ class CommentForm(FlaskForm):
     """
 
     text = TextAreaField('Text', validators=[
-        DataRequired('Comment text is required'),
+        DataRequired('Comment text is required.'),
         Length(min=1, max=500, message='Comment must be between 1 and 500 characters long.')
     ])

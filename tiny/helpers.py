@@ -51,7 +51,7 @@ def user_required(func):
     def decorated_function(*args, **kwargs):
         selected_user = get_user(user_id=kwargs['user_id'], exclude=['email', 'password'])
         if not selected_user:
-            flash('Oops - we couldn\'t find that user', 'danger')
+            flash('Oops - we couldn\'t find that user.', 'danger')
             return redirect(url_for('home.index'))
         kwargs['selected_user'] = selected_user
         return func(*args, **kwargs)
@@ -66,7 +66,7 @@ def post_required(func):
     def decorated_function(*args, **kwargs):
         selected_post = get_post(post_id=kwargs['post_id'])
         if not selected_post:
-            flash('Oops - we couldn\'t find that post', 'danger')
+            flash('Oops - we couldn\'t find that post.', 'danger')
             return redirect(url_for('home.index'))
         kwargs['selected_post'] = selected_post
         return func(*args, **kwargs)
@@ -84,7 +84,7 @@ def author_required(func):
         selected_post = kwargs['selected_post']
         current_user = kwargs['current_user']
         if selected_post.author.id != current_user.id:
-            flash('Oops - you are not the author of this post', 'danger')
+            flash('Oops - you are not the author of this post.', 'danger')
             return redirect(url_for('post.show', post_id=kwargs['post_id']))
         return func(*args, **kwargs)
     return decorated_function

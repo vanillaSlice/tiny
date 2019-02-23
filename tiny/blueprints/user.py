@@ -54,7 +54,7 @@ def sign_up():
     session['avatar_url'] = new_user.avatar_url
 
     # notify user
-    flash('Profile successfully created', 'success')
+    flash('Profile successfully created.', 'success')
 
     # redirect to user's profile page
     return redirect(url_for('user.show', user_id=session['user_id']))
@@ -144,7 +144,7 @@ def update_profile(current_user):
     session['avatar_url'] = current_user.avatar_url
 
     # notify the user
-    flash('Profile successfully updated', 'success')
+    flash('Profile successfully updated.', 'success')
 
     # redirect back to settings page
     return redirect(url_for('user.settings'))
@@ -172,7 +172,7 @@ def update_password(current_user):
     current_user.save()
 
     # notify the user
-    flash('Password successfully updated', 'success')
+    flash('Password successfully updated.', 'success')
 
     # redirect back to settings page
     return redirect(url_for('user.settings'))
@@ -194,7 +194,7 @@ def delete(current_user):
     session.clear()
 
     # notify user
-    flash('Successfully deleted account', 'success')
+    flash('Successfully deleted account.', 'success')
 
     # redirect back to homepage
     return redirect(url_for('home.index'))

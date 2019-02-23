@@ -13,6 +13,7 @@ from flask import (Blueprint,
                    session,
                    url_for)
 
+from tiny.forms import CommentForm, PostForm
 from tiny.helpers import (author_required,
                           get_comments,
                           get_posts,
@@ -20,7 +21,6 @@ from tiny.helpers import (author_required,
                           post_required,
                           serialize,
                           sign_in_required)
-from tiny.forms import CommentForm, PostForm
 from tiny.models import Comment, Post
 
 post = Blueprint('post', __name__, url_prefix='/post')
@@ -51,7 +51,7 @@ def create(current_user):
                     content=form.content.data).save()
 
     # notify user
-    flash('Post successfully created', 'success')
+    flash('Post successfully created.', 'success')
 
     # redirect to post page
     return redirect(url_for('post.show', post_id=str(new_post.id)))
@@ -105,7 +105,7 @@ def update(current_user, post_id, selected_post):
     selected_post.save()
 
     # notify the user
-    flash('Post successfully updated', 'success')
+    flash('Post successfully updated.', 'success')
 
     # redirect back to post page
     return redirect(url_for('post.show', post_id=post_id))
@@ -126,7 +126,7 @@ def delete(current_user, post_id, selected_post):
     selected_post.delete()
 
     # notify user
-    flash('Successfully deleted post', 'success')
+    flash('Successfully deleted post.', 'success')
 
     # redirect back to homepage
     return redirect(url_for('home.index'))
