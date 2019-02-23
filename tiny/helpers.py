@@ -140,6 +140,9 @@ def search_posts(search_text=None, exclude=[], order_by=[], skip=0, limit=12):
     Performs a text search on posts.
     """
 
+    if not search_text:
+        return []
+
     # cap number of posts to return
     limit = 100 if limit > 100 else limit
 
