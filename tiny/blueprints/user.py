@@ -82,7 +82,7 @@ def sign_in():
     session['avatar_url'] = form.user.avatar_url
 
     # notify user
-    flash('Successfully signed in', 'success')
+    flash('Successfully signed in.', 'success')
 
     # redirect to next screen (if there is one) or home page
     return redirect(request.args.get('next') or url_for('home.index'))
