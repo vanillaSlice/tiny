@@ -7,3 +7,4 @@ __pycache__
 build
 instance/*
 !instance/config-example.py
+mongodb/data
