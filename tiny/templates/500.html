@@ -4,8 +4,13 @@
 
 {% block content %}
   <div class="text-center">
-    <h1>404</h1>
-    <h2>We couldn&apos;t find this page.</h2>
+    <h1>500</h1>
+    <h2>Something went wrong.</h2>
+    <p>
+      Please send an email to
+      <a href="mailto:mikelowedev@gmail.com?subject=Tiny: Error Page">mikelowedev@gmail.com</a>
+      and I'll look at it straight away.
+    </p>
     <form class="search-form search-form-lg" action="{{ url_for('search.index') }}" method="get">
       <input type="search" name="terms" class="form-control search-input" placeholder="Search Tiny" />
     </form>
