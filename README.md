@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/github/license/vanillaSlice/tiny.svg)](LICENSE)
 
 A small blog app built with [Flask](http://flask.pocoo.org/) and [MongoDB](https://www.mongodb.com/). 
-A deployed version can be viewed [here](https://slicetiny.herokuapp.com/).
+A deployed version can be viewed [here](https://tiny.mikelowe.xyz/).
 **If you set up an account, please use a dummy email address and password.**
 
 ## Screenshot
