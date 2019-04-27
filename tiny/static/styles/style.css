@@ -371,6 +371,16 @@ fieldset[disabled] .btn-primary:hover {
 
 
 /*
+ * Footer styles
+ */
+
+.footer {
+  max-width: 1030px;
+  padding-bottom: 15px;
+}
+
+
+/*
  * Post card styles
  */
 

@@ -10,6 +10,7 @@ from flask_mongoengine import MongoEngine
 
 from tiny.assets import bundles
 from tiny.helpers import markdown_to_html
+from tiny.version import __version__
 
 assets = Environment()
 
@@ -49,6 +50,11 @@ def create_app(testing=False):
             os.environ.get('SESSION_COOKIE_DOMAIN', app.config.get('SESSION_COOKIE_DOMAIN')),
         'WTF_CSRF_ENABLED':
             os.environ.get('WTF_CSRF_ENABLED', str(app.config.get('WTF_CSRF_ENABLED'))).lower() == 'true'
+    })
+
+    # set version
+    app.config.update({
+        'VERSION': __version__
     })
 
     # init extensions
