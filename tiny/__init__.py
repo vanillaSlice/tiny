@@ -4,7 +4,7 @@ Exports a function to create an instance of the Tiny app.
 
 import os
 
-from flask import Flask, render_template
+from flask import abort, Flask, render_template
 from flask_assets import Environment
 from flask_mongoengine import MongoEngine
 
@@ -85,6 +85,11 @@ def create_app(testing=False):
     @app.template_filter('markdown_to_html')
     def markdown_to_html_filter(s):
         return markdown_to_html(s)
+
+    # attach catch all error handler
+    @app.errorhandler(Exception)
+    def handle_exception(_):
+        abort(500)
 
     # attach 404 error handler
     @app.errorhandler(404)
