@@ -49,7 +49,7 @@
         {{ form.csrf_token }}
         {{ render_field(form.text, show_label=False, maxlength=500, rows=4, placeholder='Leave a comment ...') }}
         <div class="form-group">
-          <button class="btn btn-primary btn-block">Send</button>
+          <button type="submit" class="btn btn-primary btn-block">Send</button>
         </div>
       </form>
     {% else %}

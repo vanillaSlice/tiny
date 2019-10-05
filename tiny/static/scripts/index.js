@@ -115,7 +115,7 @@ function createPostCard(post, wrapperCols) {
 
   // so long titles and paragraphs are truncated
   postCard.find('.title, .lead-paragraph').dotdotdot({ height: 'watch', watch: true });
-  
+
   return postCard;
 }
 
@@ -179,6 +179,15 @@ function createCommentCard(comment) {
   );
 }
 
+$('form').validator().on('submit', function (e) {
+  if (e.isDefaultPrevented()) {
+    return;
+  }
+
+  var submitElement = $(this).find(':submit');
+  submitElement.prop('disabled', true);
+});
+
 /*
  * Navigation
  */
@@ -187,7 +196,7 @@ function createCommentCard(comment) {
 $('.navbar-default .search-form .search-btn').click(function() {
   $('.navbar-default .search-input').removeClass('collapsed').focus();
 });
-  
+
 // show navigation search form on focus
 $('.navbar-default .search-input').focusin(function() {
   $('.navbar-default .search-input').removeClass('collapsed');
@@ -223,8 +232,8 @@ if ($(document.body).hasClass('user')) {
     new PostLoader({
       baseUrl: '/user/' + window.location.pathname.split('/')[2] + '/posts'
     }).loadPosts();
-  } 
-  
+  }
+
   // sign out page
   else if ($(document.body).hasClass('sign-out')) {
     $('.page .sign-out').click(handleSignOut);
@@ -258,9 +267,11 @@ if ($(document.body).hasClass('post')) {
 
       $.post(url, commentForm.serialize(), function() {
         commentForm[0].reset();
+        commentForm.find(':submit').prop('disabled', false);
         commentForm.find('.form-group').removeClass('has-error');
         commentForm.find('.help-block').text('Added comment!');
       }).fail(function(response) {
+        commentForm.find(':submit').prop('disabled', false);
         commentForm.find('.form-group').addClass('has-error');
         commentForm.find('.help-block').text(response.responseJSON.errors);
       });
@@ -307,12 +318,12 @@ if ($(document.body).hasClass('search')) {
 
     // make sure we clear current posts
     $('.posts').empty();
-    
+
     // set new url with terms
     terms = encodeURIComponent($('.page .search-input').val());
     var newurl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?terms=' + terms;
     window.history.pushState({ path:newurl }, '', newurl);
-    
+
     // update the post load and perform query
     postLoader.urlParameters = 'terms=' + terms;
     postLoader.skip = '0';
